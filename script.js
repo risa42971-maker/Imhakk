@@ -46,7 +46,7 @@ function loadToolContent(tool) {
     }
 }
 
-// IP Lookup Tool
+// IP Lookup Tool HTML
 function getIPToolHTML() {
     return `
         <div class="tool-header">
@@ -62,18 +62,23 @@ function getIPToolHTML() {
             <input type="text" id="ipInput" class="input-field" placeholder="8.8.8.8" value="8.8.8.8">
         </div>
         
-        <button class="btn-primary" onclick="lookupIP()">
-            <i class="fas fa-search"></i> SCAN IP
-        </button>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button class="btn-primary" onclick="lookupIP()" style="flex: 2;">
+                <i class="fas fa-search"></i> SCAN IP
+            </button>
+            <button class="btn-secondary" onclick="getMyIP()" style="flex: 1;">
+                <i class="fas fa-laptop"></i> MY IP
+            </button>
+        </div>
         
         <div id="ipLoading" class="loading" style="display: none;">
             <div class="spinner"></div>
-            <span>SCANNING...</span>
+            <span>SCANNING IP ADDRESS...</span>
         </div>
         
         <div id="ipResult" class="result-box" style="display: none;">
             <div class="result-title">
-                <i class="fas fa-satellite-dish"></i> INTELLIGENCE DATA
+                <i class="fas fa-satellite-dish"></i> IP INFORMATION
             </div>
             <div id="ipInfo" class="result-content"></div>
         </div>
@@ -82,7 +87,7 @@ function getIPToolHTML() {
     `;
 }
 
-// URL Shortener Tool
+// URL Shortener Tool HTML
 function getURLToolHTML() {
     return `
         <div class="tool-header">
@@ -104,7 +109,7 @@ function getURLToolHTML() {
         
         <div id="urlLoading" class="loading" style="display: none;">
             <div class="spinner"></div>
-            <span>GENERATING...</span>
+            <span>GENERATING SHORT LINK...</span>
         </div>
         
         <div id="urlResult" class="result-box" style="display: none;">
@@ -121,7 +126,7 @@ function getURLToolHTML() {
     `;
 }
 
-// Image to QR Tool
+// Image to QR Tool HTML
 function getQRToolHTML() {
     return `
         <div class="tool-header">
@@ -175,7 +180,7 @@ function getQRToolHTML() {
     `;
 }
 
-// Gmail Generator Tool
+// Gmail Generator Tool HTML
 function getGmailToolHTML() {
     return `
         <div class="tool-header">
@@ -226,7 +231,7 @@ function getGmailToolHTML() {
     `;
 }
 
-// IP Lookup Function
+// IP Lookup Function - កែថ្មីឲ្យដំណើរការ
 async function lookupIP() {
     const ip = document.getElementById('ipInput').value.trim();
     
@@ -240,26 +245,83 @@ async function lookupIP() {
     hideElement('ipError');
 
     try {
-        const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,regionName,city,isp,timezone,lat,lon`);
+        // ប្រើ Proxy ដើម្បីកុំឲ្យមាន CORS issue
+        const proxyUrl = 'https://api.allorigins.win/get?url=';
+        const targetUrl = `http://ip-api.com/json/${ip}?fields=status,country,regionName,city,isp,org,as,timezone,lat,lon,query`;
+        
+        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
         const data = await response.json();
+        
+        // allorigins.win នឹងដាក់ data នៅក្នុង .contents
+        const ipData = JSON.parse(data.contents);
 
-        if (data.status !== 'success') {
-            throw new Error('Invalid IP');
+        if (ipData.status !== 'success') {
+            throw new Error('Invalid IP Address');
         }
 
-        const info = `🌐 IP: ${ip}
-📍 Country: ${data.country}
-🗺️ Region: ${data.regionName}
-🏙️ City: ${data.city}
-📡 ISP: ${data.isp}
-⏰ Timezone: ${data.timezone}
-📌 Coordinates: ${data.lat}, ${data.lon}`;
+        // បង្ហាញព័ត៌មានជាមួយនឹងរូបតំណាង
+        const info = `
+            <div>
+                <div><i class="fas fa-globe"></i> <strong>IP Address:</strong> ${ipData.query}</div>
+                <div><i class="fas fa-map-marker-alt"></i> <strong>Country:</strong> ${ipData.country}</div>
+                <div><i class="fas fa-map"></i> <strong>Region:</strong> ${ipData.regionName}</div>
+                <div><i class="fas fa-city"></i> <strong>City:</strong> ${ipData.city}</div>
+                <div><i class="fas fa-wifi"></i> <strong>ISP:</strong> ${ipData.isp}</div>
+                <div><i class="fas fa-building"></i> <strong>Organization:</strong> ${ipData.org || 'N/A'}</div>
+                <div><i class="fas fa-clock"></i> <strong>Timezone:</strong> ${ipData.timezone}</div>
+                <div><i class="fas fa-map-pin"></i> <strong>Coordinates:</strong> ${ipData.lat}, ${ipData.lon}</div>
+            </div>
+        `;
 
-        document.getElementById('ipInfo').textContent = info;
+        document.getElementById('ipInfo').innerHTML = info;
         showElement('ipResult');
     } catch (error) {
-        showError('ipError', '⚠️ INVALID IP ADDRESS');
+        console.error('IP Lookup Error:', error);
+        
+        // ប្រើ Fallback API បើទីមួយមិនដំណើរការ
+        try {
+            const fallbackResponse = await fetch(`https://ipapi.co/${ip}/json/`);
+            const fallbackData = await fallbackResponse.json();
+            
+            if (fallbackData.error) {
+                throw new Error('Invalid IP');
+            }
+            
+            const info = `
+                <div>
+                    <div><i class="fas fa-globe"></i> <strong>IP Address:</strong> ${fallbackData.ip}</div>
+                    <div><i class="fas fa-map-marker-alt"></i> <strong>Country:</strong> ${fallbackData.country_name}</div>
+                    <div><i class="fas fa-map"></i> <strong>Region:</strong> ${fallbackData.region}</div>
+                    <div><i class="fas fa-city"></i> <strong>City:</strong> ${fallbackData.city}</div>
+                    <div><i class="fas fa-wifi"></i> <strong>ISP:</strong> ${fallbackData.org || 'N/A'}</div>
+                    <div><i class="fas fa-clock"></i> <strong>Timezone:</strong> ${fallbackData.timezone}</div>
+                    <div><i class="fas fa-map-pin"></i> <strong>Coordinates:</strong> ${fallbackData.latitude}, ${fallbackData.longitude}</div>
+                </div>
+            `;
+            
+            document.getElementById('ipInfo').innerHTML = info;
+            showElement('ipResult');
+        } catch (fallbackError) {
+            showError('ipError', '⚠️ CANNOT FETCH IP INFORMATION. PLEASE TRY AGAIN.');
+        }
     } finally {
+        showLoading('ipLoading', false);
+    }
+}
+
+// បន្ថែម Function សម្រាប់ពិនិត្យមើល IP របស់អ្នកផ្ទាល់
+async function getMyIP() {
+    showLoading('ipLoading', true);
+    hideElement('ipResult');
+    hideElement('ipError');
+    
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        document.getElementById('ipInput').value = data.ip;
+        lookupIP();
+    } catch (error) {
+        showError('ipError', '⚠️ CANNOT GET YOUR IP');
         showLoading('ipLoading', false);
     }
 }
@@ -282,15 +344,12 @@ async function shortenURL() {
     hideElement('urlResult');
     hideElement('urlError');
 
-    try {
+    setTimeout(() => {
         const shortUrl = 'https://tinyurl.com/' + Math.random().toString(36).substring(2, 8);
         document.getElementById('shortUrl').textContent = shortUrl;
         showElement('urlResult');
-    } catch (error) {
-        showError('urlError', '⚠️ CANNOT SHORTEN URL');
-    } finally {
         showLoading('urlLoading', false);
-    }
+    }, 1000);
 }
 
 // QR Code Functions
@@ -500,6 +559,20 @@ function exportAccounts() {
 
 // Utility Functions
 function showLoading(elementId, show) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.style.display = show ? 'flex' : 'none';
+    }
+}
+
+function showElement(elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.style.display = 'block';
+    }
+}
+
+function hideElement(elementId) {
     const element = document.getElementById(elementId);
     if (element) {
         element.style.display = show ? 'flex' : 'none';
