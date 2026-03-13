@@ -43,6 +43,9 @@ function loadToolContent(tool) {
         case 'gmail':
             container.innerHTML = getGmailToolHTML();
             break;
+        case 'link':
+            container.innerHTML = getLinkToolHTML();
+            break;
     }
 }
 
@@ -231,7 +234,43 @@ function getGmailToolHTML() {
     `;
 }
 
-// IP Lookup Function - កែថ្មីឲ្យដំណើរការ
+// Link Checker Tool HTML
+function getLinkToolHTML() {
+    return `
+        <div class="tool-header">
+            <div class="tool-icon">🔍</div>
+            <div class="tool-title">
+                <h2>LINK CHECKER</h2>
+                <p>>_ Check if a link is safe or suspicious</p>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label><i class="fas fa-link"></i> ENTER URL TO CHECK :</label>
+            <input type="url" id="linkInput" class="input-field" placeholder="https://example.com">
+        </div>
+        
+        <button class="btn-primary" onclick="checkLink()">
+            <i class="fas fa-shield-alt"></i> SCAN LINK
+        </button>
+        
+        <div id="linkLoading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <span>SCANNING LINK FOR THREATS...</span>
+        </div>
+        
+        <div id="linkResult" class="result-box" style="display: none;">
+            <div class="result-title">
+                <i class="fas fa-clipboard-check"></i> SCAN RESULTS
+            </div>
+            <div id="linkInfo" class="result-content"></div>
+        </div>
+        
+        <div id="linkError" class="error-message" style="display: none;"></div>
+    `;
+}
+
+// IP Lookup Function
 async function lookupIP() {
     const ip = document.getElementById('ipInput').value.trim();
     
@@ -245,21 +284,17 @@ async function lookupIP() {
     hideElement('ipError');
 
     try {
-        // ប្រើ Proxy ដើម្បីកុំឲ្យមាន CORS issue
         const proxyUrl = 'https://api.allorigins.win/get?url=';
         const targetUrl = `http://ip-api.com/json/${ip}?fields=status,country,regionName,city,isp,org,as,timezone,lat,lon,query`;
         
         const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
         const data = await response.json();
-        
-        // allorigins.win នឹងដាក់ data នៅក្នុង .contents
         const ipData = JSON.parse(data.contents);
 
         if (ipData.status !== 'success') {
             throw new Error('Invalid IP Address');
         }
 
-        // បង្ហាញព័ត៌មានជាមួយនឹងរូបតំណាង
         const info = `
             <div>
                 <div><i class="fas fa-globe"></i> <strong>IP Address:</strong> ${ipData.query}</div>
@@ -276,9 +311,6 @@ async function lookupIP() {
         document.getElementById('ipInfo').innerHTML = info;
         showElement('ipResult');
     } catch (error) {
-        console.error('IP Lookup Error:', error);
-        
-        // ប្រើ Fallback API បើទីមួយមិនដំណើរការ
         try {
             const fallbackResponse = await fetch(`https://ipapi.co/${ip}/json/`);
             const fallbackData = await fallbackResponse.json();
@@ -309,7 +341,7 @@ async function lookupIP() {
     }
 }
 
-// បន្ថែម Function សម្រាប់ពិនិត្យមើល IP របស់អ្នកផ្ទាល់
+// Get My IP
 async function getMyIP() {
     showLoading('ipLoading', true);
     hideElement('ipResult');
@@ -535,7 +567,7 @@ function generateUsername() {
 
 function exportAccounts() {
     if (accounts.length === 0) {
-        showError('gmailError', '⚠️ NO ACCOUNTS GENERATED YET');
+     showError('gmailError', '⚠️ NO ACCOUNTS GENERATED YET');
         return;
     }
 
@@ -557,22 +589,211 @@ function exportAccounts() {
     window.URL.revokeObjectURL(url);
 }
 
+// Link Checker Function
+async function checkLink() {
+    const link = document.getElementById('linkInput').value.trim();
+    
+    if (!link) {
+        showError('linkError', '⚠️ PLEASE ENTER A URL');
+        return;
+    }
+
+    if (!link.startsWith('http')) {
+        showError('linkError', '⚠️ URL MUST START WITH http:// OR https://');
+        return;
+    }
+
+    showLoading('linkLoading', true);
+    hideElement('linkResult');
+    hideElement('linkError');
+
+    setTimeout(() => {
+        try {
+            const analysis = analyzeLink(link);
+            
+            let resultHTML = `
+                <div style="margin-bottom: 15px; padding: 10px; background: #f0f3ff; border-radius: 8px;">
+                    <i class="fas fa-link"></i> <strong>URL:</strong> ${link}
+                </div>
+            `;
+            
+            if (analysis.safe) {
+                resultHTML += `
+                    <div style="color: #10b981; text-align: center;">
+                        <i class="fas fa-check-circle" style="font-size: 48px;"></i>
+                        <h3 style="margin: 10px 0;">✅ LINK LOOKS SAFE</h3>
+                        <p>No suspicious patterns detected</p>
+                    </div>
+                `;
+            } else {
+                resultHTML += `
+                    <div style="color: #ef4444; text-align: center;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
+                        <h3 style="margin: 10px 0;">⚠️ SUSPICIOUS LINK DETECTED</h3>
+                    </div>
+                `;
+            }
+            
+            resultHTML += '<div style="margin-top: 20px;">';
+            analysis.warnings.forEach(warning => {
+                resultHTML += `
+                    <div style="padding: 10px; margin-bottom: 8px; background: ${analysis.safe ? '#f0f3ff' : '#fff2f2'}; border-radius: 6px; border-left: 4px solid ${analysis.safe ? '#667eea' : '#ef4444'};">
+                        <i class="fas ${analysis.safe ? 'fa-info-circle' : 'fa-exclamation-circle'}" style="color: ${analysis.safe ? '#667eea' : '#ef4444'}; margin-right: 8px;"></i>
+                        ${warning}
+                    </div>
+                `;
+            });
+            resultHTML += '</div>';
+            
+            // បន្ថែម Tips
+            resultHTML += `
+                <div style="margin-top: 20px; padding: 12px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
+                    <i class="fas fa-lightbulb" style="color: #fbbf24;"></i>
+                    <strong style="color: #667eea;"> SAFETY TIPS:</strong>
+                    <ul style="margin-top: 8px; margin-left: 20px; color: #666;">
+                        <li>Never enter personal information on suspicious sites</li>
+                        <li>Check if the website uses HTTPS (padlock icon)</li>
+                        <li>Be careful with shortened URLs (tinyurl, bit.ly)</li>
+                        <li>If it looks too good to be true, it probably is</li>
+                    </ul>
+                </div>
+            `;
+            
+            document.getElementById('linkInfo').innerHTML = resultHTML;
+            showElement('linkResult');
+            
+        } catch (error) {
+            showError('linkError', '⚠️ ERROR ANALYZING LINK');
+        } finally {
+            showLoading('linkLoading', false);
+        }
+    }, 800);
+}
+
+// Link Analysis Function (យកពី check_link.py)
+function analyzeLink(link) {
+    const result = {
+        safe: true,
+        warnings: []
+    };
+    
+    const linkLower = link.toLowerCase();
+    
+    // 1. Check for suspicious keywords
+    const phishingKeywords = [
+        "login", "signin", "verify", "secure", "update", "confirm",
+        "banking", "paypal", "amazon", "facebook", "google",
+        "free", "bonus", "gift", "prize", "winner", "claim", 
+        "password", "account", "wallet", "bitcoin", "crypto",
+        "urgent", "suspended", "limited", "unlock"
+    ];
+    
+    phishingKeywords.forEach(keyword => {
+        if (linkLower.includes(keyword)) {
+            result.warnings.push(`⚠️ Suspicious keyword detected: "${keyword}"`);
+            result.safe = false;
+        }
+    });
+    
+    // 2. Check for suspicious TLDs
+    const suspiciousTLDs = [
+        ".xyz", ".top", ".club", ".online", ".site", ".live",
+        ".tk", ".ml", ".ga", ".cf", ".gq", // Free domains
+        ".work", ".download", ".review", ".date", ".men"
+    ];
+    
+    try {
+        const url = new URL(link);
+        const domain = url.hostname;
+        
+        suspiciousTLDs.forEach(tld => {
+            if (domain.endsWith(tld)) {
+                result.warnings.push(`⚠️ Suspicious domain extension: ${tld}`);
+                result.safe = false;
+            }
+        });
+        
+        // 3. Check for IP address instead of domain
+        const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+        if (ipRegex.test(domain)) {
+            result.warnings.push(`⚠️ Link uses IP address instead of domain name (common in scams)`);
+            result.safe = false;
+        }
+        
+        // 4. Check for URL shorteners
+        const shorteners = [
+            "bit.ly", "tinyurl", "tiny.cc", "goo.gl", "ow.ly",
+            "is.gd", "buff.ly", "adf.ly", "shorte.st", "cutt.ly"
+        ];
+        
+        shorteners.forEach(shortener => {
+            if (domain.includes(shortener)) {
+                result.warnings.push(`⚠️ Shortened URL detected (${shortener}) - destination hidden`);
+                result.safe = false;
+            }
+        });
+        
+        // 5. Check for HTTPS
+        if (!link.startsWith("https://")) {
+            result.warnings.push(`⚠️ Website does not use HTTPS (not secure)`);
+            result.safe = false;
+        }
+        
+        // 6. Check for suspicious paths
+        const suspiciousPaths = [
+            "/login.php", "/signin", "/verify", "/secure",
+            "/update-info", "/confirm", "/wallet", "/payment"
+        ];
+        
+        suspiciousPaths.forEach(path => {
+            if (linkLower.includes(path)) {
+                result.warnings.push(`⚠️ Suspicious path detected: ${path} (could be phishing page)`);
+                result.safe = false;
+            }
+        });
+        
+        // 7. Check for subdomains (too many)
+        const subdomainCount = domain.split('.').length - 2;
+        if (subdomainCount > 2) {
+            result.warnings.push(`⚠️ Unusual number of subdomains (${subdomainCount})`);
+            result.safe = false;
+        }
+        
+        // 8. Check for numbers in domain
+        const numbersInDomain = (domain.match(/\d/g) || []).length;
+        if (numbersInDomain > 5) {
+            result.warnings.push(`⚠️ Unusual amount of numbers in domain (${numbersInDomain})`);
+            result.safe = false;
+        }
+        
+    } catch (e) {
+        result.warnings.push(`⚠️ Invalid URL format`);
+        result.safe = false;
+    }
+    
+    // 9. Check link length (very long links are suspicious)
+    if (link.length > 200) {
+        result.warnings.push(`⚠️ Very long URL (${link.length} characters)`);
+        result.safe = false;
+    }
+    
+    // 10. Check for multiple special characters
+    const specialChars = (link.match(/[%@!*$]/g) || []).length;
+    if (specialChars > 5) {
+        result.warnings.push(`⚠️ Unusual number of special characters (${specialChars})`);
+        result.safe = false;
+    }
+    
+    // បើគ្មាន warnings ទេ បន្ថែម safe message
+    if (result.warnings.length === 0) {
+        result.warnings.push("✅ No suspicious patterns detected");
+    }
+    
+    return result;
+}
+
 // Utility Functions
 function showLoading(elementId, show) {
-    const element = document.getElementById(elementId);
-    if (element) {
-        element.style.display = show ? 'flex' : 'none';
-    }
-}
-
-function showElement(elementId) {
-    const element = document.getElementById(elementId);
-    if (element) {
-        element.style.display = 'block';
-    }
-}
-
-function hideElement(elementId) {
     const element = document.getElementById(elementId);
     if (element) {
         element.style.display = show ? 'flex' : 'none';
@@ -613,4 +834,4 @@ async function copyToClipboard(elementId) {
     } catch (err) {
         alert('❌ COPY FAILED');
     }
-}
+        }
