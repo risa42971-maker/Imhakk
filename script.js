@@ -85,7 +85,7 @@ function getIPToolHTML() {
     `;
 }
 
-// Gmail Generator Tool HTML
+// Gmail Generator Tool HTML (កែប្រែ)
 function getGmailToolHTML() {
     return `
         <div class="tool-header">
@@ -100,10 +100,10 @@ function getGmailToolHTML() {
             <button class="btn-secondary" onclick="generateAccounts(1)">
                 <i class="fas fa-envelope"></i> 1 ACCOUNT
             </button>
-            <button class="btn-secondary" onclick="generateAccounts(5)">
+            <button class="btn-secondary" onclick="showTelegramContact(5)">
                 <i class="fas fa-envelopes-bulk"></i> 5 ACCOUNTS
             </button>
-            <button class="btn-secondary" onclick="generateAccounts(10)">
+            <button class="btn-secondary" onclick="showTelegramContact(10)">
                 <i class="fas fa-layer-group"></i> 10 ACCOUNTS
             </button>
         </div>
@@ -327,6 +327,31 @@ function downloadRepeat() {
 }
 // ====================================================
 
+// ==================== TELEGRAM CONTACT FUNCTION (ថ្មី) ====================
+function showTelegramContact(amount) {
+    const errorDiv = document.getElementById('gmailError');
+    if (errorDiv) {
+        errorDiv.innerHTML = `
+            <div style="text-align: center;">
+                <i class="fas fa-lock" style="font-size: 48px; color: #ef4444; margin-bottom: 15px;"></i>
+                <h3 style="color: #ef4444; margin-bottom: 10px;">⚠️ FEATURE LOCKED ⚠️</h3>
+                <p style="color: #666; margin-bottom: 15px;">${amount} ACCOUNTS GENERATION IS NOT AVAILABLE</p>
+                <p style="color: #764ba2; margin-bottom: 10px;">PLEASE CONTACT OWNER TO UNLOCK:</p>
+                <a href="https://t.me/TH3Cen_cee" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 12px 30px; border-radius: 25px; text-decoration: none; font-weight: bold; margin: 10px 0;">
+                    <i class="fab fa-telegram"></i> @TH3Cen_cee
+                </a>
+                <p style="color: #999; margin-top: 15px; font-size: 0.9em;">⚡ DEVELOPED BY @TH3Cen_cee ⚡</p>
+            </div>
+        `;
+        errorDiv.style.display = 'block';
+        
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 5000);
+    }
+}
+// ====================================================
+
 // IP Lookup Function
 async function lookupIP() {
     const ip = document.getElementById('ipInput').value.trim();
@@ -535,10 +560,16 @@ async function getMyIP() {
         showError('ipError', '⚠️ CANNOT GET YOUR IP');
         showLoading('ipLoading', false);
     }
-                                }
+}
 
-// Gmail Generator Functions
+// Gmail Generator Functions (កែប្រែតែ generateAccounts function)
 function generateAccounts(amount) {
+    // បើជា 5 ឬ 10 account បង្ហាញសារ Telegram
+    if (amount === 5 || amount === 10) {
+        showTelegramContact(amount);
+        return;
+    }
+    
     showLoading('gmailLoading', true);
     hideElement('gmailResult');
     hideElement('gmailError');
@@ -975,4 +1006,4 @@ function showError(elementId, message) {
             element.style.display = 'none';
         }, 3000);
     }
-        }
+            }
