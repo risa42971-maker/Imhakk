@@ -1,5 +1,5 @@
 // ============================================================================
-// PART 1: STATE MANAGEMENT AND TOOL HTML FUNCTIONS
+// PART 1: STATE MANAGEMENT AND TOOL HTML FUNCTIONS (IP, GMAIL, LINK)
 // ============================================================================
 
 // State management
@@ -171,6 +171,10 @@ function getLinkToolHTML() {
     `;
 }
 
+// ============================================================================
+// PART 2: TOOL HTML FUNCTIONS (REPEAT WORD AND VIDEO DOWNLOADER)
+// ============================================================================
+
 // Repeat Word Tool HTML
 function getRepeatToolHTML() {
     return `
@@ -244,7 +248,7 @@ function getVideoToolHTML() {
         
         <div class="input-group">
             <label><i class="fas fa-link"></i> PASTE VIDEO LINK :</label>
-            <input type="url" id="videoLink" class="input-field" placeholder="https://vt.tiktok.com/ZSuAHXpRY/">
+            <input type="url" id="videoLink" class="input-field" placeholder="https://www.facebook.com/share/r/1CB1CwKXz5/">
         </div>
         
         <div style="margin-bottom: 20px;">
@@ -303,132 +307,8 @@ function getVideoToolHTML() {
 }
 
 // ============================================================================
-// PART 2: IP LOOKUP, REPEAT WORD, AND TELEGRAM CONTACT FUNCTIONS
+// PART 3: IP LOOKUP AND REPEAT WORD FUNCTIONS
 // ============================================================================
-
-// ==================== REPEAT WORD FUNCTIONS ====================
-function generateRepeat() {
-    const text = document.getElementById('repeatText').value.trim();
-    let count = parseInt(document.getElementById('repeatCount').value);
-    
-    if (!text) {
-        showError('repeatError', '⚠️ PLEASE ENTER SOME TEXT');
-        return;
-    }
-    
-    if (isNaN(count) || count < 1) {
-        count = 1;
-    }
-    
-    if (count > 1000) {
-        showError('repeatError', '⚠️ MAXIMUM LIMIT IS 1000 TIMES ONLY!');
-        document.getElementById('repeatCount').value = 1000;
-        count = 1000;
-        return;
-    }
-    
-    showLoading('repeatLoading', true);
-    hideElement('repeatResult');
-    hideElement('repeatError');
-    
-    setTimeout(() => {
-        try {
-            const startTime = performance.now();
-            
-            let result = '';
-            for (let i = 1; i <= count; i++) {
-                result += `${i}. ${text}\n`;
-            }
-            
-            const endTime = performance.now();
-            const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
-            
-            document.getElementById('repeatContent').innerHTML = result.replace(/\n/g, '<br>');
-            document.getElementById('repeatCountDisplay').innerText = count;
-            document.getElementById('repeatTimeDisplay').innerText = timeTaken;
-            
-            showElement('repeatResult');
-            
-        } catch (error) {
-            showError('repeatError', '⚠️ ERROR GENERATING TEXT');
-        } finally {
-            showLoading('repeatLoading', false);
-        }
-    }, 100);
-}
-
-function clearRepeat() {
-    document.getElementById('repeatText').value = '';
-    document.getElementById('repeatCount').value = '100';
-    hideElement('repeatResult');
-    hideElement('repeatError');
-}
-
-function copyRepeat() {
-    const content = document.getElementById('repeatContent').innerText;
-    
-    if (!content) {
-        showError('repeatError', '⚠️ NO CONTENT TO COPY');
-        return;
-    }
-    
-    navigator.clipboard.writeText(content).then(() => {
-        alert('✅ TEXT COPIED TO CLIPBOARD!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
-    }).catch(() => {
-        showError('repeatError', '⚠️ COPY FAILED');
-    });
-}
-
-function downloadRepeat() {
-    const content = document.getElementById('repeatContent').innerText;
-    const text = document.getElementById('repeatText').value.trim();
-    const count = document.getElementById('repeatCount').value;
-    
-    if (!content) {
-        showError('repeatError', '⚠️ NO CONTENT TO DOWNLOAD');
-        return;
-    }
-    
-    let header = `REPEATED TEXT\n`;
-    header += `================\n`;
-    header += `TEXT: "${text}"\n`;
-    header += `COUNT: ${count} TIMES\n`;
-    header += `GENERATED: ${new Date().toLocaleString()}\n`;
-    header += `DEVELOPED BY @TH3Cen_cee\n`;
-    header += `================\n\n`;
-    
-    const blob = new Blob([header + content], { type: 'text/plain' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `repeat_${Date.now()}.txt`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-}
-
-// ==================== TELEGRAM CONTACT FUNCTION ====================
-function showTelegramContact(amount) {
-    const errorDiv = document.getElementById('gmailError');
-    if (errorDiv) {
-        errorDiv.innerHTML = `
-            <div style="text-align: center;">
-                <i class="fas fa-lock" style="font-size: 48px; color: #ef4444; margin-bottom: 15px;"></i>
-                <h3 style="color: #ef4444; margin-bottom: 10px;">⚠️ FEATURE LOCKED ⚠️</h3>
-                <p style="color: #666; margin-bottom: 15px;">${amount} ACCOUNTS GENERATION IS NOT AVAILABLE</p>
-                <p style="color: #764ba2; margin-bottom: 10px;">PLEASE CONTACT OWNER TO UNLOCK:</p>
-                <a href="https://t.me/TH3Cen_cee" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 12px 30px; border-radius: 25px; text-decoration: none; font-weight: bold; margin: 10px 0;">
-                    <i class="fab fa-telegram"></i> @TH3Cen_cee
-                </a>
-                <p style="color: #999; margin-top: 15px; font-size: 0.9em;">⚡ DEVELOPED BY @TH3Cen_cee ⚡</p>
-            </div>
-        `;
-        errorDiv.style.display = 'block';
-        
-        setTimeout(() => {
-            errorDiv.style.display = 'none';
-        }, 5000);
-    }
-}
 
 // ==================== IP LOOKUP FUNCTIONS ====================
 async function lookupIP() {
@@ -637,11 +517,135 @@ async function getMyIP() {
         showError('ipError', '⚠️ CANNOT GET YOUR IP');
         showLoading('ipLoading', false);
     }
-                   }
+}
+
+// ==================== REPEAT WORD FUNCTIONS ====================
+function generateRepeat() {
+    const text = document.getElementById('repeatText').value.trim();
+    let count = parseInt(document.getElementById('repeatCount').value);
+    
+    if (!text) {
+        showError('repeatError', '⚠️ PLEASE ENTER SOME TEXT');
+        return;
+    }
+    
+    if (isNaN(count) || count < 1) {
+        count = 1;
+    }
+    
+    if (count > 1000) {
+        showError('repeatError', '⚠️ MAXIMUM LIMIT IS 1000 TIMES ONLY!');
+        document.getElementById('repeatCount').value = 1000;
+        count = 1000;
+        return;
+    }
+    
+    showLoading('repeatLoading', true);
+    hideElement('repeatResult');
+    hideElement('repeatError');
+    
+    setTimeout(() => {
+        try {
+            const startTime = performance.now();
+            
+            let result = '';
+            for (let i = 1; i <= count; i++) {
+                result += `${i}. ${text}\n`;
+            }
+            
+            const endTime = performance.now();
+            const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
+            
+            document.getElementById('repeatContent').innerHTML = result.replace(/\n/g, '<br>');
+            document.getElementById('repeatCountDisplay').innerText = count;
+            document.getElementById('repeatTimeDisplay').innerText = timeTaken;
+            
+            showElement('repeatResult');
+            
+        } catch (error) {
+            showError('repeatError', '⚠️ ERROR GENERATING TEXT');
+        } finally {
+            showLoading('repeatLoading', false);
+        }
+    }, 100);
+}
+
+function clearRepeat() {
+    document.getElementById('repeatText').value = '';
+    document.getElementById('repeatCount').value = '100';
+    hideElement('repeatResult');
+    hideElement('repeatError');
+}
+
+function copyRepeat() {
+    const content = document.getElementById('repeatContent').innerText;
+    
+    if (!content) {
+        showError('repeatError', '⚠️ NO CONTENT TO COPY');
+        return;
+    }
+    
+    navigator.clipboard.writeText(content).then(() => {
+        alert('✅ TEXT COPIED TO CLIPBOARD!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
+    }).catch(() => {
+        showError('repeatError', '⚠️ COPY FAILED');
+    });
+}
+
+function downloadRepeat() {
+    const content = document.getElementById('repeatContent').innerText;
+    const text = document.getElementById('repeatText').value.trim();
+    const count = document.getElementById('repeatCount').value;
+    
+    if (!content) {
+        showError('repeatError', '⚠️ NO CONTENT TO DOWNLOAD');
+        return;
+    }
+    
+    let header = `REPEATED TEXT\n`;
+    header += `================\n`;
+    header += `TEXT: "${text}"\n`;
+    header += `COUNT: ${count} TIMES\n`;
+    header += `GENERATED: ${new Date().toLocaleString()}\n`;
+    header += `DEVELOPED BY @TH3Cen_cee\n`;
+    header += `================\n\n`;
+    
+    const blob = new Blob([header + content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `repeat_${Date.now()}.txt`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
 
 // ============================================================================
-// PART 3: GMAIL GENERATOR, VIDEO DOWNLOADER, LINK CHECKER, UTILITY FUNCTIONS
+// PART 4: GMAIL GENERATOR AND TELEGRAM CONTACT FUNCTIONS
 // ============================================================================
+
+// ==================== TELEGRAM CONTACT FUNCTION ====================
+function showTelegramContact(amount) {
+    const errorDiv = document.getElementById('gmailError');
+    if (errorDiv) {
+        errorDiv.innerHTML = `
+            <div style="text-align: center;">
+                <i class="fas fa-lock" style="font-size: 48px; color: #ef4444; margin-bottom: 15px;"></i>
+                <h3 style="color: #ef4444; margin-bottom: 10px;">⚠️ FEATURE LOCKED ⚠️</h3>
+                <p style="color: #666; margin-bottom: 15px;">${amount} ACCOUNTS GENERATION IS NOT AVAILABLE</p>
+                <p style="color: #764ba2; margin-bottom: 10px;">PLEASE CONTACT OWNER TO UNLOCK:</p>
+                <a href="https://t.me/TH3Cen_cee" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 12px 30px; border-radius: 25px; text-decoration: none; font-weight: bold; margin: 10px 0;">
+                    <i class="fab fa-telegram"></i> @TH3Cen_cee
+                </a>
+                <p style="color: #999; margin-top: 15px; font-size: 0.9em;">⚡ DEVELOPED BY @TH3Cen_cee ⚡</p>
+            </div>
+        `;
+        errorDiv.style.display = 'block';
+        
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 5000);
+    }
+}
 
 // ==================== GMAIL GENERATOR FUNCTIONS ====================
 function generateAccounts(amount) {
@@ -820,7 +824,11 @@ function exportAccounts() {
     a.download = `accounts_${Date.now()}.txt`;
     a.click();
     window.URL.revokeObjectURL(url);
-}
+                           }
+
+// ============================================================================
+// PART 5: VIDEO DOWNLOADER, LINK CHECKER AND UTILITY FUNCTIONS
+// ============================================================================
 
 // ==================== VIDEO DOWNLOADER FUNCTIONS ====================
 function selectPlatform(platform) {
@@ -865,85 +873,81 @@ function downloadVideo() {
                 'youtube': 'YouTube', 'vimeo': 'Vimeo', 'linkedin': 'LinkedIn'
             };
             
-            const shortLink = link.length > 30 ? link.substring(0, 30) + '...' : link;
+            const shortLink = link.length > 35 ? link.substring(0, 35) + '...' : link;
+            const randomId = Math.random().toString(36).substring(2, 10);
             
             const resultHTML = `
                 <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
                     
+                    <!-- VIDEO FOUND Section -->
                     <div style="padding: 25px; border-bottom: 2px solid #f0f0f0;">
                         <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-                            <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-check" style="color: white; font-size: 24px;"></i>
+                            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-check" style="color: white; font-size: 30px;"></i>
                             </div>
                             <div>
-                                <h2 style="color: #10b981; margin: 0; font-size: 28px; font-weight: bold;">VIDEO FOUND</h2>
-                                <p style="color: #666; margin: 5px 0 0;">Ready to download</p>
+                                <h2 style="color: #10b981; margin: 0; font-size: 32px; font-weight: bold;">VIDEO FOUND</h2>
+                                <p style="color: #666; margin: 5px 0 0; font-size: 16px;">Ready to download</p>
                             </div>
                         </div>
                         
-                        <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 20px; border-radius: 12px; border: 1px solid #e0e7ff;">
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-                                <i class="fas fa-link" style="color: #667eea; font-size: 18px;"></i>
-                                <span style="color: #333; font-weight: 500;">${shortLink}</span>
+                        <div style="background: #f8f9ff; padding: 20px; border-radius: 12px; border: 1px solid #e0e7ff;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                <i class="fas fa-link" style="color: #667eea; font-size: 18px; width: 20px;"></i>
+                                <span style="color: #333; font-weight: 500; word-break: break-all;">${shortLink}</span>
                             </div>
                             <div style="display: flex; align-items: center; gap: 12px;">
-                                <i class="fas fa-share-alt" style="color: #764ba2; font-size: 18px;"></i>
-                                <span style="color: #666;">k.co/m/${Math.random().toString(36).substring(2, 10)}</span>
+                                <i class="fas fa-share-alt" style="color: #764ba2; font-size: 18px; width: 20px;"></i>
+                                <span style="color: #666;">k.co/m/${randomId}</span>
                             </div>
                         </div>
                     </div>
                     
-                    <div style="padding: 25px; border-bottom: 2px solid #f0f0f0; background: #fafbff;">
-                        <div style="display: flex; align-items: center; gap: 20px;">
-                            <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #667eea20, #764ba220); border-radius: 20px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fab fa-${selectedPlatform}" style="font-size: 40px; color: #667eea;"></i>
+                    <!-- Platform Info Section -->
+                    <div style="padding: 20px 25px; border-bottom: 2px solid #f0f0f0; background: #fafbff;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea20, #764ba220); border-radius: 15px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fab fa-${selectedPlatform}" style="font-size: 30px; color: #667eea;"></i>
                             </div>
                             <div>
-                                <h3 style="color: #333; margin: 0; font-size: 24px;">${platformNames[selectedPlatform]}</h3>
+                                <h3 style="color: #333; margin: 0; font-size: 22px;">${platformNames[selectedPlatform]}</h3>
                                 <p style="color: #999; margin: 5px 0 0;">source detected · video available</p>
                             </div>
                         </div>
                     </div>
                     
-                    <div style="padding: 25px; border-bottom: 2px solid #f0f0f0;">
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
-                            <div style="background: #f8f9ff; padding: 15px; border-radius: 12px; text-align: center;">
-                                <i class="fas fa-clock" style="color: #667eea; font-size: 20px; margin-bottom: 8px; display: block;"></i>
-                                <span style="color: #333; font-weight: 600;">03:45</span>
-                                <p style="color: #999; font-size: 12px; margin: 5px 0 0;">Duration</p>
-                            </div>
-                            <div style="background: #f8f9ff; padding: 15px; border-radius: 12px; text-align: center;">
-                                <i class="fas fa-video" style="color: #764ba2; font-size: 20px; margin-bottom: 8px; display: block;"></i>
-                                <span style="color: #333; font-weight: 600;">HD 1080p</span>
-                                <p style="color: #999; font-size: 12px; margin: 5px 0 0;">Quality</p>
-                            </div>
-                            <div style="background: #f8f9ff; padding: 15px; border-radius: 12px; text-align: center;">
-                                <i class="fas fa-database" style="color: #f59e0b; font-size: 20px; margin-bottom: 8px; display: block;"></i>
-                                <span style="color: #333; font-weight: 600;">45.2 MB</span>
-                                <p style="color: #999; font-size: 12px; margin: 5px 0 0;">Size</p>
-                            </div>
-                        </div>
-                        
-                        <div style="background: #f0f3ff; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
-                            <p style="color: #667eea; margin: 0 0 10px;"><i class="fas fa-check-circle"></i> Video detection completed</p>
-                            <div style="display: flex; gap: 10px;">
-                                <span style="background: #10b98120; color: #10b981; padding: 5px 12px; border-radius: 20px; font-size: 13px;">✓ MP4 Format</span>
-                                <span style="background: #764ba220; color: #764ba2; padding: 5px 12px; border-radius: 20px; font-size: 13px;">✓ No Watermark</span>
-                                <span style="background: #f59e0b20; color: #f59e0b; padding: 5px 12px; border-radius: 20px; font-size: 13px;">✓ Audio Included</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div style="padding: 25px; background: linear-gradient(135deg, #667eea10, #764ba210);">
-                        <button onclick="simulateDownload('${selectedPlatform}', 'HD')" style="width: 100%; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 18px; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s;">
-                            <i class="fas fa-download"></i> DOWNLOAD VIDEO NOW
+                    <!-- DOWNLOAD BUTTON Section -->
+                    <div style="padding: 30px 25px; background: linear-gradient(135deg, #667eea05, #764ba205); text-align: center;">
+                        <button onclick="startVideoDownload('${selectedPlatform}', '${link.replace(/'/g, "\\'")}')" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 20px 40px; border-radius: 50px; font-size: 24px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 15px; transition: all 0.3s; box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);">
+                            <i class="fas fa-download" style="font-size: 28px;"></i>
+                            DOWNLOAD VIDEO
                         </button>
-                        <p style="color: #999; font-size: 13px; text-align: center; margin: 15px 0 0;">
-                            <i class="fas fa-shield-alt"></i> Secure download · No virus · Fast speed
+                        <p style="color: #999; font-size: 14px; margin-top: 20px;">
+                            <i class="fas fa-shield-alt" style="color: #10b981;"></i> Secure download · No virus · Fast speed
                         </p>
                     </div>
                     
-                    <div style="padding: 15px; text-align: center; background: white; border-top: 1px solid #f0f0f0;">
+                    <!-- Video Info Section -->
+                    <div style="padding: 20px 25px; border-top: 2px solid #f0f0f0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; background: white;">
+                        <div style="text-align: center;">
+                            <i class="fas fa-clock" style="color: #667eea; font-size: 20px; margin-bottom: 5px; display: block;"></i>
+                            <span style="color: #333; font-weight: 600;">03:45</span>
+                            <p style="color: #999; font-size: 12px; margin: 5px 0 0;">Duration</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fas fa-video" style="color: #764ba2; font-size: 20px; margin-bottom: 5px; display: block;"></i>
+                            <span style="color: #333; font-weight: 600;">HD 1080p</span>
+                            <p style="color: #999; font-size: 12px; margin: 5px 0 0;">Quality</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fas fa-database" style="color: #f59e0b; font-size: 20px; margin-bottom: 5px; display: block;"></i>
+                            <span style="color: #333; font-weight: 600;">45.2 MB</span>
+                            <p style="color: #999; font-size: 12px; margin: 5px 0 0;">Size</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Developer Credit -->
+                    <div style="padding: 15px; text-align: center; background: #f8f9ff; border-top: 1px solid #e0e7ff;">
                         <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
                     </div>
                 </div>
@@ -960,37 +964,39 @@ function downloadVideo() {
     }, 1500);
 }
 
-function simulateDownload(platform, quality) {
+function startVideoDownload(platform, link) {
     showLoading('videoLoading', true);
     
     setTimeout(() => {
         showLoading('videoLoading', false);
         
-        const link = document.getElementById('videoLink').value.trim();
         const platformNames = {
             'facebook': 'Facebook', 'instagram': 'Instagram', 'snapchat': 'Snapchat',
             'twitter': 'Twitter', 'reddit': 'Reddit', 'tiktok': 'TikTok',
             'youtube': 'YouTube', 'vimeo': 'Vimeo', 'linkedin': 'LinkedIn'
         };
         
+        // Create video filename
         const videoTitle = `${platform}_video_${Date.now()}`;
         const fileName = `${videoTitle}.mp4`;
         
-        const videoInfo = {
-            platform: platformNames[platform],
-            link: link,
-            quality: quality,
-            format: 'MP4',
-            size: quality === 'HD' ? '45.2 MB' : '18.5 MB',
-            duration: '03:45',
-            resolution: quality === 'HD' ? '1920x1080' : '854x480',
-            downloaded: new Date().toISOString(),
-            filename: fileName,
-            developer: '@TH3Cen_cee'
-        };
+        // Create video content
+        const videoContent = `VIDEO FILE: ${fileName}\n`;
+        videoContent += `Platform: ${platformNames[platform]}\n`;
+        videoContent += `Link: ${link}\n`;
+        videoContent += `Downloaded: ${new Date().toLocaleString()}\n`;
+        videoContent += `Format: MP4\n`;
+        videoContent += `Quality: HD 1080p\n`;
+        videoContent += `Duration: 03:45\n`;
+        videoContent += `Size: 45.2 MB\n`;
+        videoContent += `\n`;
+        videoContent += `This is a simulated video file. In a real application,\n`;
+        videoContent += `this would be the actual video content.\n`;
+        videoContent += `\n`;
+        videoContent += `⚡ DEVELOPED BY @TH3Cen_cee ⚡\n`;
         
-        const jsonContent = JSON.stringify(videoInfo, null, 2);
-        const blob = new Blob([jsonContent], { type: 'video/mp4' });
+        // Create blob and download as .mp4
+        const blob = new Blob([videoContent], { type: 'video/mp4' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -998,22 +1004,24 @@ function simulateDownload(platform, quality) {
         a.click();
         window.URL.revokeObjectURL(url);
         
+        // Show success message
         const videoError = document.getElementById('videoError');
         if (videoError) {
             videoError.innerHTML = `
-                <div style="text-align: center; background: #10b981; color: white; border: none;">
-                    <i class="fas fa-check-circle" style="font-size: 36px; margin-bottom: 10px;"></i>
-                    <h3 style="color: white; margin-bottom: 5px;">✅ DOWNLOAD SUCCESSFUL!</h3>
-                    <p style="color: rgba(255,255,255,0.9);">${fileName} has been downloaded</p>
+                <div style="text-align: center; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 20px; border-radius: 12px;">
+                    <i class="fas fa-check-circle" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>
+                    <h3 style="color: white; margin-bottom: 10px; font-size: 24px;">✅ DOWNLOAD STARTED!</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 16px;">${fileName}</p>
+                    <p style="color: rgba(255,255,255,0.8); margin-top: 10px;">⚡ DEVELOPED BY @TH3Cen_cee ⚡</p>
                 </div>
             `;
             videoError.style.display = 'block';
-            videoError.style.background = '#10b981';
-            videoError.style.borderColor = '#059669';
+            videoError.style.background = 'transparent';
+            videoError.style.border = 'none';
             
             setTimeout(() => {
                 videoError.style.display = 'none';
-            }, 3000);
+            }, 4000);
         }
     }, 2000);
 }
@@ -1222,4 +1230,4 @@ function showError(elementId, message) {
             element.style.display = 'none';
         }, 3000);
     }
-        }
+            }
