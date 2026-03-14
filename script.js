@@ -41,6 +41,9 @@ function loadToolContent(tool) {
         case 'gmail':
             container.innerHTML = getGmailToolHTML();
             break;
+        case 'repeat':
+            container.innerHTML = getRepeatToolHTML();
+            break;
     }
 }
 
@@ -158,7 +161,171 @@ function getLinkToolHTML() {
         
         <div id="linkError" class="error-message" style="display: none;"></div>
     `;
-                }
+}
+
+// ==================== REPEAT WORD TOOL ====================
+function getRepeatToolHTML() {
+    return `
+        <div class="tool-header">
+            <div class="tool-icon">🔄</div>
+            <div class="tool-title">
+                <h2>REPEAT WORD</h2>
+                <p>>_ Repeat any word up to 1000 times</p>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label><i class="fas fa-pencil-alt"></i> ENTER YOUR TEXT :</label>
+            <input type="text" id="repeatText" class="input-field" placeholder="សួស្តី Deepseek">
+        </div>
+        
+        <div class="input-group">
+            <label><i class="fas fa-hashtag"></i> NUMBER OF TIMES (MAX 1000) :</label>
+            <input type="number" id="repeatCount" class="input-field" placeholder="100" min="1" max="1000" value="100">
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button class="btn-primary" onclick="generateRepeat()" style="flex: 2;">
+                <i class="fas fa-play"></i> GENERATE
+            </button>
+            <button class="btn-secondary" onclick="clearRepeat()" style="flex: 1;">
+                <i class="fas fa-trash"></i> CLEAR
+            </button>
+        </div>
+        
+        <div id="repeatLoading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <span>GENERATING REPEATED TEXT...</span>
+        </div>
+        
+        <div id="repeatResult" class="result-box" style="display: none;">
+            <div class="account-stats">
+                <span><i class="fas fa-list"></i> <span id="repeatCountDisplay">0</span> LINES</span>
+                <span><i class="fas fa-clock"></i> <span id="repeatTimeDisplay">0.0</span>s</span>
+            </div>
+            <div id="repeatContent" class="result-content" style="max-height: 400px; overflow-y: auto; font-family: monospace; white-space: pre-wrap;"></div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="btn-secondary" onclick="copyRepeat()" style="flex: 1;">
+                    <i class="fas fa-copy"></i> COPY
+                </button>
+                <button class="btn-secondary" onclick="downloadRepeat()" style="flex: 1;">
+                    <i class="fas fa-download"></i> DOWNLOAD TXT
+                </button>
+            </div>
+        </div>
+        
+        <div id="repeatError" class="error-message" style="display: none;"></div>
+        
+        <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
+            <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
+        </div>
+    `;
+}
+
+// Generate Repeat
+function generateRepeat() {
+    const text = document.getElementById('repeatText').value.trim();
+    let count = parseInt(document.getElementById('repeatCount').value);
+    
+    if (!text) {
+        showError('repeatError', '⚠️ PLEASE ENTER SOME TEXT');
+        return;
+    }
+    
+    if (isNaN(count) || count < 1) {
+        count = 1;
+    }
+    
+    if (count > 1000) {
+        showError('repeatError', '⚠️ MAXIMUM LIMIT IS 1000 TIMES ONLY!');
+        document.getElementById('repeatCount').value = 1000;
+        count = 1000;
+        return;
+    }
+    
+    showLoading('repeatLoading', true);
+    hideElement('repeatResult');
+    hideElement('repeatError');
+    
+    setTimeout(() => {
+        try {
+            const startTime = performance.now();
+            
+            let result = '';
+            for (let i = 1; i <= count; i++) {
+                result += `${i}. ${text}\n`;
+            }
+            
+            const endTime = performance.now();
+            const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
+            
+            document.getElementById('repeatContent').innerHTML = result.replace(/\n/g, '<br>');
+            document.getElementById('repeatCountDisplay').innerText = count;
+            document.getElementById('repeatTimeDisplay').innerText = timeTaken;
+            
+            showElement('repeatResult');
+            
+        } catch (error) {
+            showError('repeatError', '⚠️ ERROR GENERATING TEXT');
+        } finally {
+            showLoading('repeatLoading', false);
+        }
+    }, 100);
+}
+
+// Clear Repeat
+function clearRepeat() {
+    document.getElementById('repeatText').value = '';
+    document.getElementById('repeatCount').value = '100';
+    hideElement('repeatResult');
+    hideElement('repeatError');
+}
+
+// Copy to Clipboard
+function copyRepeat() {
+    const content = document.getElementById('repeatContent').innerText;
+    
+    if (!content) {
+        showError('repeatError', '⚠️ NO CONTENT TO COPY');
+        return;
+    }
+    
+    navigator.clipboard.writeText(content).then(() => {
+        alert('✅ TEXT COPIED TO CLIPBOARD!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
+    }).catch(() => {
+        showError('repeatError', '⚠️ COPY FAILED');
+    });
+}
+
+// Download as TXT
+function downloadRepeat() {
+    const content = document.getElementById('repeatContent').innerText;
+    const text = document.getElementById('repeatText').value.trim();
+    const count = document.getElementById('repeatCount').value;
+    
+    if (!content) {
+        showError('repeatError', '⚠️ NO CONTENT TO DOWNLOAD');
+        return;
+    }
+    
+    let header = `REPEATED TEXT\n`;
+    header += `================\n`;
+    header += `TEXT: "${text}"\n`;
+    header += `COUNT: ${count} TIMES\n`;
+    header += `GENERATED: ${new Date().toLocaleString()}\n`;
+    header += `DEVELOPED BY @TH3Cen_cee\n`;
+    header += `================\n\n`;
+    
+    const blob = new Blob([header + content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `repeat_${Date.now()}.txt`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+// ====================================================
 
 // IP Lookup Function
 async function lookupIP() {
@@ -368,7 +535,7 @@ async function getMyIP() {
         showError('ipError', '⚠️ CANNOT GET YOUR IP');
         showLoading('ipLoading', false);
     }
-                            }
+                                }
 
 // Gmail Generator Functions
 function generateAccounts(amount) {
@@ -808,27 +975,4 @@ function showError(elementId, message) {
             element.style.display = 'none';
         }, 3000);
     }
-}
-
-async function copyToClipboard(elementId) {
-    const element = document.getElementById(elementId);
-    let text = '';
-    
-    if (element.tagName === 'DIV') {
-        text = element.textContent || element.innerText;
-    } else {
-        text = element.textContent;
-    }
-    
-    const linkMatch = text.match(/https?:\/\/[^\s]+/);
-    if (linkMatch) {
-        text = linkMatch[0];
-    }
-    
-    try {
-        await navigator.clipboard.writeText(text);
-        alert('✅ LINK COPIED!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
-    } catch (err) {
-        alert('❌ COPY FAILED\n\n⚡ DEVELOPED BY @TH3Cen_cee');
-    }
-    }
+        }
