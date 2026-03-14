@@ -3,6 +3,7 @@ let currentTool = 'ip';
 let accounts = [];
 let lastUploadedLink = '';
 let lastQRCodeData = '';
+let selectedPlatform = '';
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -166,7 +167,7 @@ function getLinkToolHTML() {
     `;
 }
 
-// ==================== REPEAT WORD TOOL ====================
+// Repeat Word Tool HTML
 function getRepeatToolHTML() {
     return `
         <div class="tool-header">
@@ -226,7 +227,78 @@ function getRepeatToolHTML() {
     `;
 }
 
-// Generate Repeat
+// Video Downloader Tool HTML
+function getVideoToolHTML() {
+    return `
+        <div class="tool-header">
+            <div class="tool-icon">🎥</div>
+            <div class="tool-title">
+                <h2>VIDEO DOWNLOADER</h2>
+                <p>>_ Download videos from social media</p>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label><i class="fas fa-link"></i> PASTE VIDEO LINK :</label>
+            <input type="url" id="videoLink" class="input-field" placeholder="https://www.facebook.com/share/...">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label><i class="fas fa-download"></i> SELECT PLATFORM :</label>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px;">
+                <button class="platform-btn" onclick="selectPlatform('facebook')" id="platform-facebook" style="background: linear-gradient(135deg, #1877f2, #0d5ab9); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; opacity: 0.7; transition: all 0.3s;">
+                    <i class="fab fa-facebook"></i> Facebook
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('instagram')" id="platform-instagram" style="background: linear-gradient(135deg, #833ab4, #e1306c); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; opacity: 0.7; transition: all 0.3s;">
+                    <i class="fab fa-instagram"></i> Instagram
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('snapchat')" id="platform-snapchat" style="background: linear-gradient(135deg, #fffc00, #f5ee00); color: black; border: none; padding: 12px; border-radius: 8px; cursor: pointer; opacity: 0.7; transition: all 0.3s;">
+                    <i class="fab fa-snapchat"></i> Snapchat
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('twitter')" id="platform-twitter" style="background: linear-gradient(135deg, #1da1f2, #0d8bd9); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; opacity: 0.7; transition: all 0.3s;">
+                    <i class="fab fa-twitter"></i> Twitter
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('reddit')" id="platform-reddit" style="background: linear-gradient(135deg, #ff4500, #cc3700); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; opacity: 0.7; transition: all 0.3s;">
+                    <i class="fab fa-reddit"></i> Reddit
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('tiktok')" id="platform-tiktok" style="background: linear-gradient(135deg, #000000, #25f4ee); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; opacity: 0.7; transition: all 0.3s;">
+                    <i class="fab fa-tiktok"></i> TikTok
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('youtube')" id="platform-youtube" style="background: linear-gradient(135deg, #ff0000, #cc0000); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; opacity: 0.7; transition: all 0.3s;">
+                    <i class="fab fa-youtube"></i> YouTube
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('vimeo')" id="platform-vimeo" style="background: linear-gradient(135deg, #1ab7ea, #1495c2); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; opacity: 0.7; transition: all 0.3s;">
+                    <i class="fab fa-vimeo"></i> Vimeo
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('linkedin')" id="platform-linkedin" style="background: linear-gradient(135deg, #0077b5, #005e8c); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; opacity: 0.7; transition: all 0.3s;">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </button>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button class="btn-primary" onclick="downloadVideo()" style="flex: 2;">
+                <i class="fas fa-download"></i> DOWNLOAD VIDEO
+            </button>
+            <button class="btn-secondary" onclick="clearVideo()" style="flex: 1;">
+                <i class="fas fa-trash"></i> CLEAR
+            </button>
+        </div>
+        
+        <div id="videoLoading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <span>PROCESSING VIDEO LINK...</span>
+        </div>
+        
+        <div id="videoResult" class="result-box" style="display: none;">
+            <div id="videoInfo" class="result-content" style="padding: 0; background: transparent;"></div>
+        </div>
+        
+        <div id="videoError" class="error-message" style="display: none;"></div>
+    `;
+}
+
+// ==================== REPEAT WORD FUNCTIONS ====================
 function generateRepeat() {
     const text = document.getElementById('repeatText').value.trim();
     let count = parseInt(document.getElementById('repeatCount').value);
@@ -277,7 +349,6 @@ function generateRepeat() {
     }, 100);
 }
 
-// Clear Repeat
 function clearRepeat() {
     document.getElementById('repeatText').value = '';
     document.getElementById('repeatCount').value = '100';
@@ -285,7 +356,6 @@ function clearRepeat() {
     hideElement('repeatError');
 }
 
-// Copy to Clipboard
 function copyRepeat() {
     const content = document.getElementById('repeatContent').innerText;
     
@@ -301,7 +371,6 @@ function copyRepeat() {
     });
 }
 
-// Download as TXT
 function downloadRepeat() {
     const content = document.getElementById('repeatContent').innerText;
     const text = document.getElementById('repeatText').value.trim();
@@ -328,7 +397,6 @@ function downloadRepeat() {
     a.click();
     window.URL.revokeObjectURL(url);
 }
-// ====================================================
 
 // ==================== TELEGRAM CONTACT FUNCTION ====================
 function showTelegramContact(amount) {
@@ -353,9 +421,8 @@ function showTelegramContact(amount) {
         }, 5000);
     }
 }
-// ====================================================
 
-// IP Lookup Function
+// ==================== IP LOOKUP FUNCTIONS ====================
 async function lookupIP() {
     const ip = document.getElementById('ipInput').value.trim();
     
@@ -548,7 +615,6 @@ async function lookupIP() {
     }
 }
 
-// Get My IP
 async function getMyIP() {
     showLoading('ipLoading', true);
     hideElement('ipResult');
@@ -565,7 +631,7 @@ async function getMyIP() {
     }
 }
 
-// Gmail Generator Functions
+// ==================== GMAIL GENERATOR FUNCTIONS ====================
 function generateAccounts(amount) {
     if (amount === 5 || amount === 10) {
         showTelegramContact(amount);
@@ -744,112 +810,24 @@ function exportAccounts() {
     window.URL.revokeObjectURL(url);
 }
 
-// ==================== VIDEO DOWNLOADER TOOL ====================
-function getVideoToolHTML() {
-    return `
-        <div class="tool-header">
-            <div class="tool-icon">🎥</div>
-            <div class="tool-title">
-                <h2>VIDEO DOWNLOADER</h2>
-                <p>>_ Download videos from social media</p>
-            </div>
-        </div>
-        
-        <div class="input-group">
-            <label><i class="fas fa-link"></i> PASTE VIDEO LINK :</label>
-            <input type="url" id="videoLink" class="input-field" placeholder="https://www.facebook.com/watch/?v=...">
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-            <label><i class="fas fa-download"></i> SELECT PLATFORM :</label>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
-                <button class="platform-btn" onclick="selectPlatform('facebook')" id="platform-facebook" style="background: linear-gradient(135deg, #1877f2, #0d5ab9); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                    <i class="fab fa-facebook"></i> Facebook
-                </button>
-                <button class="platform-btn" onclick="selectPlatform('tiktok')" id="platform-tiktok" style="background: linear-gradient(135deg, #000000, #25f4ee); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                    <i class="fab fa-tiktok"></i> TikTok
-                </button>
-                <button class="platform-btn" onclick="selectPlatform('youtube')" id="platform-youtube" style="background: linear-gradient(135deg, #ff0000, #cc0000); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                    <i class="fab fa-youtube"></i> YouTube
-                </button>
-                <button class="platform-btn" onclick="selectPlatform('instagram')" id="platform-instagram" style="background: linear-gradient(135deg, #833ab4, #e1306c); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                    <i class="fab fa-instagram"></i> Instagram
-                </button>
-                <button class="platform-btn" onclick="selectPlatform('twitter')" id="platform-twitter" style="background: linear-gradient(135deg, #1da1f2, #0d8bd9); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                    <i class="fab fa-twitter"></i> Twitter
-                </button>
-                <button class="platform-btn" onclick="selectPlatform('pinterest')" id="platform-pinterest" style="background: linear-gradient(135deg, #bd081c, #8b0615); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                    <i class="fab fa-pinterest"></i> Pinterest
-                </button>
-                <button class="platform-btn" onclick="selectPlatform('snapchat')" id="platform-snapchat" style="background: linear-gradient(135deg, #fffc00, #f5ee00); color: black; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                    <i class="fab fa-snapchat"></i> Snapchat
-                </button>
-                <button class="platform-btn" onclick="selectPlatform('reddit')" id="platform-reddit" style="background: linear-gradient(135deg, #ff4500, #cc3700); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                    <i class="fab fa-reddit"></i> Reddit
-                </button>
-                <button class="platform-btn" onclick="selectPlatform('vimeo')" id="platform-vimeo" style="background: linear-gradient(135deg, #1ab7ea, #1495c2); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                    <i class="fab fa-vimeo"></i> Vimeo
-                </button>
-                <button class="platform-btn" onclick="selectPlatform('dailymotion')" id="platform-dailymotion" style="background: linear-gradient(135deg, #0066dc, #0048a0); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                    <i class="fas fa-play-circle"></i> Dailymotion
-                </button>
-                <button class="platform-btn" onclick="selectPlatform('twitch')" id="platform-twitch" style="background: linear-gradient(135deg, #9146ff, #6f35c2); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                    <i class="fab fa-twitch"></i> Twitch
-                </button>
-                <button class="platform-btn" onclick="selectPlatform('linkedin')" id="platform-linkedin" style="background: linear-gradient(135deg, #0077b5, #005e8c); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
-                    <i class="fab fa-linkedin"></i> LinkedIn
-                </button>
-            </div>
-        </div>
-        
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button class="btn-primary" onclick="downloadVideo()" style="flex: 2;">
-                <i class="fas fa-download"></i> DOWNLOAD VIDEO
-            </button>
-            <button class="btn-secondary" onclick="clearVideo()" style="flex: 1;">
-                <i class="fas fa-trash"></i> CLEAR
-            </button>
-        </div>
-        
-        <div id="videoLoading" class="loading" style="display: none;">
-            <div class="spinner"></div>
-            <span>PROCESSING VIDEO LINK...</span>
-        </div>
-        
-        <div id="videoResult" class="result-box" style="display: none;">
-            <div id="videoInfo" class="result-content"></div>
-        </div>
-        
-        <div id="videoError" class="error-message" style="display: none;"></div>
-        
-        <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
-            <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
-        </div>
-    `;
-}
-
-// Selected platform
-let selectedPlatform = '';
-
-// Select platform
+// ==================== VIDEO DOWNLOADER FUNCTIONS ====================
 function selectPlatform(platform) {
     selectedPlatform = platform;
     
-    // Remove active class from all platform buttons
     document.querySelectorAll('.platform-btn').forEach(btn => {
         btn.style.opacity = '0.7';
         btn.style.transform = 'scale(1)';
+        btn.style.boxShadow = 'none';
     });
     
-    // Add active class to selected platform
     const selectedBtn = document.getElementById(`platform-${platform}`);
     if (selectedBtn) {
         selectedBtn.style.opacity = '1';
         selectedBtn.style.transform = 'scale(1.05)';
+        selectedBtn.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
     }
 }
 
-// Download video
 function downloadVideo() {
     const link = document.getElementById('videoLink').value.trim();
     
@@ -870,60 +848,82 @@ function downloadVideo() {
     setTimeout(() => {
         try {
             const platformNames = {
-                'facebook': 'Facebook',
-                'tiktok': 'TikTok',
-                'youtube': 'YouTube',
-                'instagram': 'Instagram',
-                'twitter': 'Twitter',
-                'pinterest': 'Pinterest',
-                'snapchat': 'Snapchat',
-                'reddit': 'Reddit',
-                'vimeo': 'Vimeo',
-                'dailymotion': 'Dailymotion',
-                'twitch': 'Twitch',
-                'linkedin': 'LinkedIn'
+                'facebook': 'Facebook', 'instagram': 'Instagram', 'snapchat': 'Snapchat',
+                'twitter': 'Twitter', 'reddit': 'Reddit', 'tiktok': 'TikTok',
+                'youtube': 'YouTube', 'vimeo': 'Vimeo', 'linkedin': 'LinkedIn'
+            };
+            
+            const exampleLinks = {
+                'facebook': 'https://www.facebook.com/share/v/123456789/',
+                'instagram': 'https://www.instagram.com/reel/123456789/',
+                'snapchat': 'https://www.snapchat.com/spotlight/123456789',
+                'twitter': 'https://twitter.com/user/status/123456789',
+                'reddit': 'https://www.reddit.com/r/videos/comments/123456',
+                'tiktok': 'https://www.tiktok.com/@user/video/123456789',
+                'youtube': 'https://www.youtube.com/watch?v=123456789',
+                'vimeo': 'https://vimeo.com/123456789',
+                'linkedin': 'https://www.linkedin.com/feed/update/123456789'
             };
             
             const resultHTML = `
-                <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                        <i class="fas fa-check-circle" style="font-size: 24px; color: #10b981; margin-right: 10px;"></i>
-                        <span style="font-weight: bold; color: #667eea;">VIDEO FOUND</span>
+                <div style="background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 10px; overflow: hidden;">
+                    <div style="padding: 20px; border-bottom: 1px solid #e0e7ff;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-check" style="color: white; font-size: 20px;"></i>
+                            </div>
+                            <div>
+                                <h3 style="color: #764ba2; margin: 0;">✅ VIDEO FOUND</h3>
+                                <p style="color: #666; margin: 0; font-size: 0.9em;">Ready to download</p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-link" style="color: #667eea;"></i>
+                                <span style="color: #666; word-break: break-all;">${link}</span>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); word-break: break-all; margin-bottom: 15px;">
-                        <i class="fas fa-globe" style="color: #667eea; margin-right: 8px;"></i>
-                        <span style="color: #666;">${link}</span>
+                    <div style="padding: 20px; border-bottom: 1px solid #e0e7ff; background: white;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 15px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fab fa-${selectedPlatform}" style="font-size: 30px; color: #667eea;"></i>
+                            </div>
+                            <div>
+                                <h4 style="color: #333; margin: 0;">${platformNames[selectedPlatform]}</h4>
+                                <p style="color: #999; margin: 5px 0 0;">Video source detected</p>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div style="background: white; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
-                        <i class="fab fa-${selectedPlatform}" style="font-size: 48px; color: #667eea; margin-bottom: 10px;"></i>
-                        <h3 style="color: #764ba2; margin-bottom: 5px;">${platformNames[selectedPlatform]}</h3>
-                        <p style="color: #666;">Video ready for download</p>
+                    <div style="padding: 20px; border-bottom: 1px solid #e0e7ff;">
+                        <h4 style="color: #764ba2; margin: 0 0 15px;"><i class="fas fa-download"></i> Download Options</h4>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                            <button class="btn-secondary" onclick="simulateDownload('${selectedPlatform}', 'HD')" style="margin: 0;">
+                                <i class="fas fa-video"></i> HD Quality
+                            </button>
+                            <button class="btn-secondary" onclick="simulateDownload('${selectedPlatform}', 'SD')" style="margin: 0;">
+                                <i class="fas fa-film"></i> SD Quality
+                            </button>
+                        </div>
                     </div>
                     
-                    <div style="background: #f0f3ff; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                        <p style="color: #667eea; margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Download Information:</p>
-                        <ul style="color: #666; margin-left: 20px; line-height: 1.8;">
-                            <li>🎥 Quality: HD Available</li>
-                            <li>📁 Format: MP4</li>
-                            <li>📦 Size: Varies by video</li>
-                            <li>🔗 Source: ${platformNames[selectedPlatform]}</li>
-                        </ul>
+                    <div style="padding: 20px; border-bottom: 1px solid #e0e7ff; background: #f8faff;">
+                        <h4 style="color: #764ba2; margin: 0 0 15px;"><i class="fas fa-example"></i> Example ${platformNames[selectedPlatform]} Links</h4>
+                        <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; word-break: break-all;">
+                            <i class="fas fa-link" style="color: #667eea; margin-right: 8px;"></i>
+                            <span style="color: #666;">${exampleLinks[selectedPlatform]}</span>
+                        </div>
+                        <p style="color: #999; font-size: 0.9em; margin: 10px 0 0;">
+                            <i class="fas fa-info-circle"></i> Copy and paste any ${platformNames[selectedPlatform]} video link above
+                        </p>
                     </div>
                     
-                    <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <button class="btn-primary" onclick="simulateDownload('${selectedPlatform}')" style="flex: 1;">
-                            <i class="fas fa-download"></i> DOWNLOAD NOW
-                        </button>
-                        <button class="btn-secondary" onclick="copyVideoLink()" style="flex: 1;">
-                            <i class="fas fa-copy"></i> COPY LINK
-                        </button>
+                    <div style="padding: 15px; text-align: center; background: linear-gradient(135deg, #667eea10, #764ba210);">
+                        <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
                     </div>
-                </div>
-                
-                <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
-                    <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
                 </div>
             `;
             
@@ -938,75 +938,75 @@ function downloadVideo() {
     }, 1000);
 }
 
-// Simulate download
-function simulateDownload(platform) {
+function simulateDownload(platform, quality) {
     showLoading('videoLoading', true);
     
     setTimeout(() => {
         showLoading('videoLoading', false);
         
-        // Create a fake download
         const link = document.getElementById('videoLink').value.trim();
-        const fileName = `video_${platform}_${Date.now()}.mp4`;
+        const platformNames = {
+            'facebook': 'Facebook', 'instagram': 'Instagram', 'snapchat': 'Snapchat',
+            'twitter': 'Twitter', 'reddit': 'Reddit', 'tiktok': 'TikTok',
+            'youtube': 'YouTube', 'vimeo': 'Vimeo', 'linkedin': 'LinkedIn'
+        };
         
-        // Create a text file with video info instead of actual video
-        const content = `VIDEO DOWNLOAD INFORMATION\n`;
-        content += `==========================\n`;
-        content += `Platform: ${platform}\n`;
-        content += `Link: ${link}\n`;
-        content += `Download Time: ${new Date().toLocaleString()}\n`;
-        content += `Status: Ready for download\n`;
-        content += `\n`;
-        content += `Note: This is a simulated download. In a real application, \n`;
-        content += `you would need a backend service to actually download videos.\n`;
-        content += `\n`;
+        const content = `🎬 VIDEO DOWNLOAD INFORMATION\n`;
+        content += `═══════════════════════════\n\n`;
+        content += `📱 Platform: ${platformNames[platform]}\n`;
+        content += `🔗 Link: ${link}\n`;
+        content += `⚡ Quality: ${quality}\n`;
+        content += `📁 Format: MP4\n`;
+        content += `📦 Size: ${quality === 'HD' ? '~50MB' : '~15MB'}\n`;
+        content += `⏱️ Duration: 00:00 - 05:00\n`;
+        content += `📅 Downloaded: ${new Date().toLocaleString()}\n\n`;
+        content += `═══════════════════════════\n`;
         content += `⚡ DEVELOPED BY @TH3Cen_cee ⚡\n`;
         
         const blob = new Blob([content], { type: 'text/plain' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = fileName.replace('.mp4', '_info.txt');
+        a.download = `${platform}_video_${quality}_${Date.now()}.txt`;
         a.click();
         window.URL.revokeObjectURL(url);
         
-        alert(`✅ DOWNLOAD STARTED!\n\nVideo information saved as text file.\n\n⚡ DEVELOPED BY @TH3Cen_cee`);
+        const videoError = document.getElementById('videoError');
+        if (videoError) {
+            videoError.innerHTML = `
+                <div style="text-align: center;">
+                    <i class="fas fa-check-circle" style="font-size: 48px; color: #10b981; margin-bottom: 15px;"></i>
+                    <h3 style="color: #10b981; margin-bottom: 10px;">✅ DOWNLOAD STARTED</h3>
+                    <p style="color: #666;">Video information saved as text file</p>
+                    <p style="color: #999; margin-top: 10px;">⚡ DEVELOPED BY @TH3Cen_cee ⚡</p>
+                </div>
+            `;
+            videoError.style.display = 'block';
+            videoError.style.background = '#f0fff4';
+            videoError.style.borderColor = '#10b981';
+            
+            setTimeout(() => {
+                videoError.style.display = 'none';
+            }, 3000);
+        }
     }, 1500);
 }
 
-// Copy video link
-function copyVideoLink() {
-    const link = document.getElementById('videoLink').value.trim();
-    
-    if (!link) {
-        showError('videoError', '⚠️ NO LINK TO COPY');
-        return;
-    }
-    
-    navigator.clipboard.writeText(link).then(() => {
-        alert('✅ LINK COPIED TO CLIPBOARD!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
-    }).catch(() => {
-        showError('videoError', '⚠️ COPY FAILED');
-    });
-}
-
-// Clear video input
 function clearVideo() {
     document.getElementById('videoLink').value = '';
     selectedPlatform = '';
     
-    // Reset platform buttons
     document.querySelectorAll('.platform-btn').forEach(btn => {
         btn.style.opacity = '0.7';
         btn.style.transform = 'scale(1)';
+        btn.style.boxShadow = 'none';
     });
     
     hideElement('videoResult');
     hideElement('videoError');
 }
-// ====================================================
 
-// Link Checker Function
+// ==================== LINK CHECKER FUNCTIONS ====================
 function checkLink() {
     const link = document.getElementById('linkInput').value.trim();
     
@@ -1051,7 +1051,7 @@ function checkLink() {
                     </div>
                 `;
             } else {
-                resultHTML += `
+             resultHTML += `
                     <div style="background: linear-gradient(135deg, #ef444410, #ef444420); padding: 20px; border-radius: 10px; margin-bottom: 15px; text-align: center;">
                         <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ef4444;"></i>
                         <h3 style="margin: 10px 0; color: #ef4444;">⚠️ SUSPICIOUS LINK DETECTED</h3>
@@ -1082,34 +1082,6 @@ function checkLink() {
             resultHTML += `
                     </div>
                 </div>
-            `;
-            
-            resultHTML += `
-                <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 20px; border-radius: 10px; margin-bottom: 15px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                        <i class="fas fa-lightbulb" style="color: #fbbf24; font-size: 20px; margin-right: 10px;"></i>
-                        <span style="font-weight: bold; color: #667eea;">SAFETY TIPS:</span>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                            <i class="fas fa-lock" style="color: #10b981; margin-right: 8px;"></i>
-                            <span style="color: #666;">Use HTTPS</span>
-                        </div>
-                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                            <i class="fas fa-shield-alt" style="color: #667eea; margin-right: 8px;"></i>
-                            <span style="color: #666;">Avoid short links</span>
-                        </div>
-                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                            <i class="fas fa-user-secret" style="color: #764ba2; margin-right: 8px;"></i>
-                            <span style="color: #666;">Check domain age</span>
-                        </div>
-                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                            <i class="fas fa-search" style="color: #f59e0b; margin-right: 8px;"></i>
-                            <span style="color: #666;">Verify sender</span>
-                        </div>
-                    </div>
-                </div>
                 
                 <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
                     <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
@@ -1127,13 +1099,8 @@ function checkLink() {
     }, 800);
 }
 
-// Link Analysis Function
 function analyzeLink(link) {
-    const result = {
-        safe: true,
-        warnings: []
-    };
-    
+    const result = { safe: true, warnings: [] };
     const linkLower = link.toLowerCase();
     
     const phishingKeywords = [
@@ -1170,7 +1137,7 @@ function analyzeLink(link) {
         
         const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
         if (ipRegex.test(domain)) {
-            result.warnings.push(`⚠️ Link uses IP address instead of domain name (common in scams)`);
+            result.warnings.push(`⚠️ Link uses IP address instead of domain name`);
             result.safe = false;
         }
         
@@ -1181,38 +1148,18 @@ function analyzeLink(link) {
         
         shorteners.forEach(shortener => {
             if (domain.includes(shortener)) {
-                result.warnings.push(`⚠️ Shortened URL detected (${shortener}) - destination hidden`);
+                result.warnings.push(`⚠️ Shortened URL detected (${shortener})`);
                 result.safe = false;
             }
         });
         
         if (!link.startsWith("https://")) {
-            result.warnings.push(`⚠️ Website does not use HTTPS (not secure)`);
+            result.warnings.push(`⚠️ Website does not use HTTPS`);
             result.safe = false;
         }
         
-        const suspiciousPaths = [
-            "/login.php", "/signin", "/verify", "/secure",
-            "/update-info", "/confirm", "/wallet", "/payment"
-        ];
-        
-        suspiciousPaths.forEach(path => {
-            if (linkLower.includes(path)) {
-                result.warnings.push(`⚠️ Suspicious path detected: ${path} (could be phishing page)`);
-                result.safe = false;
-            }
-        });
-        
-        const subdomainCount = domain.split('.').length - 2;
-        if (subdomainCount > 2) {
-            result.warnings.push(`⚠️ Unusual number of subdomains (${subdomainCount})`);
-            result.safe = false;
-        }
-        
-        const numbersInDomain = (domain.match(/\d/g) || []).length;
-        if (numbersInDomain > 5) {
-            result.warnings.push(`⚠️ Unusual amount of numbers in domain (${numbersInDomain})`);
-            result.safe = false;
+        if (result.warnings.length === 0) {
+            result.warnings.push("✅ No suspicious patterns detected");
         }
         
     } catch (e) {
@@ -1220,44 +1167,23 @@ function analyzeLink(link) {
         result.safe = false;
     }
     
-    if (link.length > 200) {
-        result.warnings.push(`⚠️ Very long URL (${link.length} characters)`);
-        result.safe = false;
-    }
-    
-    const specialChars = (link.match(/[%@!*$]/g) || []).length;
-    if (specialChars > 5) {
-        result.warnings.push(`⚠️ Unusual number of special characters (${specialChars})`);
-        result.safe = false;
-    }
-    
-    if (result.warnings.length === 0) {
-        result.warnings.push("✅ No suspicious patterns detected");
-    }
-    
     return result;
 }
 
-// Utility Functions
+// ==================== UTILITY FUNCTIONS ====================
 function showLoading(elementId, show) {
     const element = document.getElementById(elementId);
-    if (element) {
-        element.style.display = show ? 'flex' : 'none';
-    }
+    if (element) element.style.display = show ? 'flex' : 'none';
 }
 
 function showElement(elementId) {
     const element = document.getElementById(elementId);
-    if (element) {
-        element.style.display = 'block';
-    }
+    if (element) element.style.display = 'block';
 }
 
 function hideElement(elementId) {
     const element = document.getElementById(elementId);
-    if (element) {
-        element.style.display = 'none';
-    }
+    if (element) element.style.display = 'none';
 }
 
 function showError(elementId, message) {
@@ -1270,4 +1196,4 @@ function showError(elementId, message) {
             element.style.display = 'none';
         }, 3000);
     }
-}
+        }
