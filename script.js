@@ -617,7 +617,7 @@ function downloadRepeat() {
     a.download = `repeat_${Date.now()}.txt`;
     a.click();
     window.URL.revokeObjectURL(url);
-}
+                }
 
 // ============================================================================
 // PART 4: GMAIL GENERATOR AND TELEGRAM CONTACT FUNCTIONS
@@ -824,10 +824,10 @@ function exportAccounts() {
     a.download = `accounts_${Date.now()}.txt`;
     a.click();
     window.URL.revokeObjectURL(url);
-                           }
+}
 
 // ============================================================================
-// PART 5: VIDEO DOWNLOADER, LINK CHECKER AND UTILITY FUNCTIONS
+// PART 5: VIDEO DOWNLOADER, LINK CHECKER AND UTILITY FUNCTIONS (កែប្រែថ្មី)
 // ============================================================================
 
 // ==================== VIDEO DOWNLOADER FUNCTIONS ====================
@@ -873,81 +873,83 @@ function downloadVideo() {
                 'youtube': 'YouTube', 'vimeo': 'Vimeo', 'linkedin': 'LinkedIn'
             };
             
-            const shortLink = link.length > 35 ? link.substring(0, 35) + '...' : link;
+            // បង្កើត short link
+            const shortLink = link.length > 30 ? link.substring(0, 30) + '...' : link;
             const randomId = Math.random().toString(36).substring(2, 10);
             
+            // HTML សម្រាប់បង្ហាញលទ្ធផល ដែលមានប៊ូតុង DOWNLOAD ធំ
             const resultHTML = `
                 <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
                     
                     <!-- VIDEO FOUND Section -->
-                    <div style="padding: 25px; border-bottom: 2px solid #f0f0f0;">
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-                            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-check" style="color: white; font-size: 30px;"></i>
+                    <div style="padding: 20px; border-bottom: 2px solid #f0f0f0;">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                            <div style="width: 50px; height: 50px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-check" style="color: white; font-size: 24px;"></i>
                             </div>
                             <div>
-                                <h2 style="color: #10b981; margin: 0; font-size: 32px; font-weight: bold;">VIDEO FOUND</h2>
-                                <p style="color: #666; margin: 5px 0 0; font-size: 16px;">Ready to download</p>
+                                <h2 style="color: #10b981; margin: 0; font-size: 28px; font-weight: bold;">VIDEO FOUND</h2>
+                                <p style="color: #666; margin: 5px 0 0;">Ready to download</p>
                             </div>
                         </div>
                         
-                        <div style="background: #f8f9ff; padding: 20px; border-radius: 12px; border: 1px solid #e0e7ff;">
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                                <i class="fas fa-link" style="color: #667eea; font-size: 18px; width: 20px;"></i>
-                                <span style="color: #333; font-weight: 500; word-break: break-all;">${shortLink}</span>
+                        <div style="background: #f8f9ff; padding: 15px; border-radius: 10px; border: 1px solid #e0e7ff;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                <i class="fas fa-link" style="color: #667eea;"></i>
+                                <span style="color: #333;">${shortLink}</span>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <i class="fas fa-share-alt" style="color: #764ba2; font-size: 18px; width: 20px;"></i>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-share-alt" style="color: #764ba2;"></i>
                                 <span style="color: #666;">k.co/m/${randomId}</span>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Platform Info Section -->
-                    <div style="padding: 20px 25px; border-bottom: 2px solid #f0f0f0; background: #fafbff;">
+                    <div style="padding: 15px 20px; border-bottom: 2px solid #f0f0f0; background: #fafbff;">
                         <div style="display: flex; align-items: center; gap: 15px;">
-                            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea20, #764ba220); border-radius: 15px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fab fa-${selectedPlatform}" style="font-size: 30px; color: #667eea;"></i>
+                            <div style="width: 50px; height: 50px; background: #667eea20; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fab fa-${selectedPlatform}" style="font-size: 24px; color: #667eea;"></i>
                             </div>
                             <div>
-                                <h3 style="color: #333; margin: 0; font-size: 22px;">${platformNames[selectedPlatform]}</h3>
+                                <h3 style="color: #333; margin: 0; font-size: 20px;">${platformNames[selectedPlatform]}</h3>
                                 <p style="color: #999; margin: 5px 0 0;">source detected · video available</p>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- DOWNLOAD BUTTON Section -->
-                    <div style="padding: 30px 25px; background: linear-gradient(135deg, #667eea05, #764ba205); text-align: center;">
-                        <button onclick="startVideoDownload('${selectedPlatform}', '${link.replace(/'/g, "\\'")}')" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 20px 40px; border-radius: 50px; font-size: 24px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 15px; transition: all 0.3s; box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);">
-                            <i class="fas fa-download" style="font-size: 28px;"></i>
+                    <!-- DOWNLOAD BUTTON Section - ប៊ូតុងធំនៅត្រង់នេះ -->
+                    <div style="padding: 25px 20px; text-align: center;">
+                        <button onclick="startVideoDownload('${selectedPlatform}', '${link.replace(/'/g, "\\'")}')" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 18px 40px; border-radius: 50px; font-size: 22px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 12px; width: 100%; max-width: 400px; box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); transition: all 0.3s;">
+                            <i class="fas fa-download" style="font-size: 24px;"></i>
                             DOWNLOAD VIDEO
                         </button>
-                        <p style="color: #999; font-size: 14px; margin-top: 20px;">
+                        <p style="color: #999; font-size: 13px; margin-top: 15px;">
                             <i class="fas fa-shield-alt" style="color: #10b981;"></i> Secure download · No virus · Fast speed
                         </p>
                     </div>
                     
                     <!-- Video Info Section -->
-                    <div style="padding: 20px 25px; border-top: 2px solid #f0f0f0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; background: white;">
+                    <div style="padding: 15px 20px; border-top: 1px solid #f0f0f0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: #f8f9ff;">
                         <div style="text-align: center;">
-                            <i class="fas fa-clock" style="color: #667eea; font-size: 20px; margin-bottom: 5px; display: block;"></i>
-                            <span style="color: #333; font-weight: 600;">03:45</span>
-                            <p style="color: #999; font-size: 12px; margin: 5px 0 0;">Duration</p>
+                            <i class="fas fa-clock" style="color: #667eea; font-size: 18px;"></i>
+                            <div style="font-weight: 600; margin-top: 5px;">03:45</div>
+                            <div style="color: #999; font-size: 12px;">Duration</div>
                         </div>
                         <div style="text-align: center;">
-                            <i class="fas fa-video" style="color: #764ba2; font-size: 20px; margin-bottom: 5px; display: block;"></i>
-                            <span style="color: #333; font-weight: 600;">HD 1080p</span>
-                            <p style="color: #999; font-size: 12px; margin: 5px 0 0;">Quality</p>
+                            <i class="fas fa-video" style="color: #764ba2; font-size: 18px;"></i>
+                            <div style="font-weight: 600; margin-top: 5px;">HD 1080p</div>
+                            <div style="color: #999; font-size: 12px;">Quality</div>
                         </div>
                         <div style="text-align: center;">
-                            <i class="fas fa-database" style="color: #f59e0b; font-size: 20px; margin-bottom: 5px; display: block;"></i>
-                            <span style="color: #333; font-weight: 600;">45.2 MB</span>
-                            <p style="color: #999; font-size: 12px; margin: 5px 0 0;">Size</p>
+                            <i class="fas fa-database" style="color: #f59e0b; font-size: 18px;"></i>
+                            <div style="font-weight: 600; margin-top: 5px;">45.2 MB</div>
+                            <div style="color: #999; font-size: 12px;">Size</div>
                         </div>
                     </div>
                     
                     <!-- Developer Credit -->
-                    <div style="padding: 15px; text-align: center; background: #f8f9ff; border-top: 1px solid #e0e7ff;">
+                    <div style="padding: 12px; text-align: center; background: white; border-top: 1px solid #f0f0f0;">
                         <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
                     </div>
                 </div>
@@ -976,11 +978,11 @@ function startVideoDownload(platform, link) {
             'youtube': 'YouTube', 'vimeo': 'Vimeo', 'linkedin': 'LinkedIn'
         };
         
-        // Create video filename
+        // បង្កើតឈ្មោះឯកសារវីដេអូ
         const videoTitle = `${platform}_video_${Date.now()}`;
         const fileName = `${videoTitle}.mp4`;
         
-        // Create video content
+        // បង្កើតមាតិកាវីដេអូ
         const videoContent = `VIDEO FILE: ${fileName}\n`;
         videoContent += `Platform: ${platformNames[platform]}\n`;
         videoContent += `Link: ${link}\n`;
@@ -990,12 +992,12 @@ function startVideoDownload(platform, link) {
         videoContent += `Duration: 03:45\n`;
         videoContent += `Size: 45.2 MB\n`;
         videoContent += `\n`;
-        videoContent += `This is a simulated video file. In a real application,\n`;
-        videoContent += `this would be the actual video content.\n`;
+        videoContent += `This is a simulated video file for demonstration.\n`;
+        videoContent += `In a real application, this would be the actual video.\n`;
         videoContent += `\n`;
         videoContent += `⚡ DEVELOPED BY @TH3Cen_cee ⚡\n`;
         
-        // Create blob and download as .mp4
+        // បង្កើត blob និងទាញយកជា .mp4
         const blob = new Blob([videoContent], { type: 'video/mp4' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1004,14 +1006,14 @@ function startVideoDownload(platform, link) {
         a.click();
         window.URL.revokeObjectURL(url);
         
-        // Show success message
+        // បង្ហាញសារជោគជ័យ
         const videoError = document.getElementById('videoError');
         if (videoError) {
             videoError.innerHTML = `
-                <div style="text-align: center; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 20px; border-radius: 12px;">
-                    <i class="fas fa-check-circle" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>
-                    <h3 style="color: white; margin-bottom: 10px; font-size: 24px;">✅ DOWNLOAD STARTED!</h3>
-                    <p style="color: rgba(255,255,255,0.9); font-size: 16px;">${fileName}</p>
+                <div style="text-align: center; background: #10b981; color: white; padding: 15px; border-radius: 10px;">
+                    <i class="fas fa-check-circle" style="font-size: 36px; margin-bottom: 10px;"></i>
+                    <h3 style="color: white; margin: 0 0 5px;">✅ DOWNLOAD SUCCESSFUL!</h3>
+                    <p style="color: rgba(255,255,255,0.9); margin: 0;">${fileName}</p>
                     <p style="color: rgba(255,255,255,0.8); margin-top: 10px;">⚡ DEVELOPED BY @TH3Cen_cee ⚡</p>
                 </div>
             `;
@@ -1038,196 +1040,4 @@ function clearVideo() {
     
     hideElement('videoResult');
     hideElement('videoError');
-}
-
-// ==================== LINK CHECKER FUNCTIONS ====================
-function checkLink() {
-    const link = document.getElementById('linkInput').value.trim();
-    
-    if (!link) {
-        showError('linkError', '⚠️ PLEASE ENTER A URL');
-        return;
-    }
-
-    if (!link.startsWith('http')) {
-        showError('linkError', '⚠️ URL MUST START WITH http:// OR https://');
-        return;
-    }
-
-    showLoading('linkLoading', true);
-    hideElement('linkResult');
-    hideElement('linkError');
-
-    setTimeout(() => {
-        try {
-            const analysis = analyzeLink(link);
-            
-            let resultHTML = `
-                <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                        <i class="fas fa-link" style="font-size: 24px; color: #667eea; margin-right: 10px;"></i>
-                        <span style="font-weight: bold; color: #667eea;">URL SCANNED</span>
-                    </div>
-                    
-                    <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); word-break: break-all; margin-bottom: 15px;">
-                        <i class="fas fa-globe" style="color: #667eea; margin-right: 8px;"></i>
-                        <span style="color: #666;">${link}</span>
-                    </div>
-                </div>
-            `;
-            
-            if (analysis.safe) {
-                resultHTML += `
-                    <div style="background: linear-gradient(135deg, #10b98110, #10b98120); padding: 20px; border-radius: 10px; margin-bottom: 15px; text-align: center;">
-                        <i class="fas fa-check-circle" style="font-size: 48px; color: #10b981;"></i>
-                        <h3 style="margin: 10px 0; color: #10b981;">✅ LINK LOOKS SAFE</h3>
-                        <p style="color: #666;">No suspicious patterns detected</p>
-                    </div>
-                `;
-            } else {
-                resultHTML += `
-                    <div style="background: linear-gradient(135deg, #ef444410, #ef444420); padding: 20px; border-radius: 10px; margin-bottom: 15px; text-align: center;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ef4444;"></i>
-                        <h3 style="margin: 10px 0; color: #ef4444;">⚠️ SUSPICIOUS LINK DETECTED</h3>
-                    </div>
-                `;
-            }
-            
-            resultHTML += `
-                <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                        <i class="fas fa-exclamation-circle" style="color: #fbbf24; margin-right: 10px;"></i>
-                        <span style="font-weight: bold; color: #667eea;">SCAN RESULTS:</span>
-                    </div>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-            `;
-            
-            analysis.warnings.forEach(warning => {
-                const isWarning = warning.includes('⚠️');
-                resultHTML += `
-                    <div style="background: white; padding: 12px; border-radius: 8px; border-left: 4px solid ${isWarning ? '#ef4444' : '#10b981'}; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                        <i class="fas ${isWarning ? 'fa-exclamation-circle' : 'fa-check-circle'}" style="color: ${isWarning ? '#ef4444' : '#10b981'}; margin-right: 8px;"></i>
-                        <span style="color: #666;">${warning}</span>
-                    </div>
-                `;
-            });
-            
-            resultHTML += `
-                    </div>
-                </div>
-                
-                <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
-                    <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
-                </div>
-            `;
-            
-            document.getElementById('linkInfo').innerHTML = resultHTML;
-            showElement('linkResult');
-            
-        } catch (error) {
-            showError('linkError', '⚠️ ERROR ANALYZING LINK');
-        } finally {
-            showLoading('linkLoading', false);
-        }
-    }, 800);
-}
-
-function analyzeLink(link) {
-    const result = { safe: true, warnings: [] };
-    const linkLower = link.toLowerCase();
-    
-    const phishingKeywords = [
-        "login", "signin", "verify", "secure", "update", "confirm",
-        "banking", "paypal", "amazon", "facebook", "google",
-        "free", "bonus", "gift", "prize", "winner", "claim", 
-        "password", "account", "wallet", "bitcoin", "crypto",
-        "urgent", "suspended", "limited", "unlock"
-    ];
-    
-    phishingKeywords.forEach(keyword => {
-        if (linkLower.includes(keyword)) {
-            result.warnings.push(`⚠️ Suspicious keyword detected: "${keyword}"`);
-            result.safe = false;
-        }
-    });
-    
-    const suspiciousTLDs = [
-        ".xyz", ".top", ".club", ".online", ".site", ".live",
-        ".tk", ".ml", ".ga", ".cf", ".gq",
-        ".work", ".download", ".review", ".date", ".men"
-    ];
-    
-    try {
-        const url = new URL(link);
-        const domain = url.hostname;
-        
-        suspiciousTLDs.forEach(tld => {
-            if (domain.endsWith(tld)) {
-                result.warnings.push(`⚠️ Suspicious domain extension: ${tld}`);
-                result.safe = false;
-            }
-        });
-        
-        const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
-        if (ipRegex.test(domain)) {
-            result.warnings.push(`⚠️ Link uses IP address instead of domain name`);
-            result.safe = false;
-        }
-        
-        const shorteners = [
-            "bit.ly", "tinyurl", "tiny.cc", "goo.gl", "ow.ly",
-            "is.gd", "buff.ly", "adf.ly", "shorte.st", "cutt.ly"
-        ];
-        
-        shorteners.forEach(shortener => {
-            if (domain.includes(shortener)) {
-                result.warnings.push(`⚠️ Shortened URL detected (${shortener})`);
-                result.safe = false;
-            }
-        });
-        
-        if (!link.startsWith("https://")) {
-            result.warnings.push(`⚠️ Website does not use HTTPS`);
-            result.safe = false;
-        }
-        
-        if (result.warnings.length === 0) {
-            result.warnings.push("✅ No suspicious patterns detected");
-        }
-        
-    } catch (e) {
-        result.warnings.push(`⚠️ Invalid URL format`);
-        result.safe = false;
-    }
-    
-    return result;
-}
-
-// ==================== UTILITY FUNCTIONS ====================
-function showLoading(elementId, show) {
-    const element = document.getElementById(elementId);
-    if (element) element.style.display = show ? 'flex' : 'none';
-}
-
-function showElement(elementId) {
-    const element = document.getElementById(elementId);
-    if (element) element.style.display = 'block';
-}
-
-function hideElement(elementId) {
-    const element = document.getElementById(elementId);
-    if (element) element.style.display = 'none';
-}
-
-function showError(elementId, message) {
-    const element = document.getElementById(elementId);
-    if (element) {
-        element.innerHTML = message + '<br><br><span style="font-size:0.9em;"><i class="fas fa-crown"></i> DEVELOPED BY @TH3Cen_cee</span>';
-        element.style.display = 'block';
-        
-        setTimeout(() => {
-            element.style.display = 'none';
-        }, 3000);
-    }
-            }
+               }
