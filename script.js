@@ -1,6 +1,8 @@
 // State management
 let currentTool = 'ip';
 let accounts = [];
+let lastUploadedLink = '';
+let lastQRCodeData = '';
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -37,7 +39,7 @@ function loadToolContent(tool) {
             container.innerHTML = getURLToolHTML();
             break;
         case 'qr':
-            container.innerHTML = getUploadToolHTML(); // ប្ដូរជា Upload Tool
+            container.innerHTML = getUploadToolHTML();
             break;
         case 'gmail':
             container.innerHTML = getGmailToolHTML();
@@ -83,6 +85,9 @@ function getIPToolHTML() {
                 <i class="fas fa-satellite-dish"></i> IP INFORMATION
             </div>
             <div id="ipInfo" class="result-content"></div>
+            <div class="developer-credit">
+                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+            </div>
         </div>
         
         <div id="ipError" class="error-message" style="display: none;"></div>
@@ -122,13 +127,16 @@ function getURLToolHTML() {
             <button class="btn-secondary" style="margin-top: 15px; width: 100%;" onclick="copyToClipboard('shortUrl')">
                 <i class="fas fa-copy"></i> COPY LINK
             </button>
+            <div class="developer-credit">
+                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+            </div>
         </div>
         
         <div id="urlError" class="error-message" style="display: none;"></div>
     `;
 }
 
-// UPLOAD TOOL HTML (ជំនួស Image to QR)
+// UPLOAD TOOL HTML
 function getUploadToolHTML() {
     return `
         <div class="tool-header">
@@ -136,22 +144,6 @@ function getUploadToolHTML() {
             <div class="tool-title">
                 <h2>UPLOAD TO CLOUD</h2>
                 <p>>_ Upload files & get direct link + QR code</p>
-            </div>
-        </div>
-        
-        <div class="telegram-info" style="margin-bottom: 20px;">
-            <div class="neon-card" style="padding: 15px;">
-                <div class="neon-icon" style="width: 40px; height: 40px; font-size: 20px;">
-                    <i class="fab fa-telegram"></i>
-                </div>
-                <div class="neon-content">
-                    <div class="neon-item">
-                        <span class="neon-label">🤖 BOT :</span>
-                        <a href="https://t.me/Darknet_cen3bot" target="_blank" class="neon-link">
-                            <i class="fab fa-telegram"></i> @Darknet_cen3bot
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
         
@@ -186,6 +178,16 @@ function getUploadToolHTML() {
             </button>
         </div>
         
+        <div class="upload-alternative">
+            <p><i class="fas fa-info-circle"></i> HAVING UPLOAD ISSUES?</p>
+            <a href="https://t.me/Darknet_cen3bot" target="_blank" class="telegram-bot-btn">
+                <i class="fab fa-telegram"></i> UPLOAD VIA TELEGRAM BOT
+            </a>
+            <p style="font-size: 0.9em; color: #999; margin-top: 10px;">
+                No file size limit • Get instant link • QR code included
+            </p>
+        </div>
+        
         <div id="uploadLoading" class="loading" style="display: none;">
             <div class="spinner"></div>
             <span>UPLOADING TO CLOUD...</span>
@@ -195,12 +197,7 @@ function getUploadToolHTML() {
             <div class="result-title">
                 <i class="fas fa-check-circle"></i> UPLOAD SUCCESSFUL
             </div>
-            <div id="uploadInfo" class="result-content" style="text-align: center;">
-                <div style="margin-bottom: 15px;">
-                    <i class="fas fa-link" style="font-size: 24px; color: #667eea;"></i>
-                </div>
-                <div id="uploadLink" style="word-break: break-all; background: #f0f3ff; padding: 10px; border-radius: 8px;"></div>
-            </div>
+            <div id="uploadInfo" class="result-content" style="text-align: center;"></div>
             
             <div id="qrCodeContainer" style="display: none; text-align: center; margin-top: 20px;">
                 <div class="result-title">
@@ -218,13 +215,13 @@ function getUploadToolHTML() {
                 <button class="btn-secondary" onclick="copyUploadLink()">
                     <i class="fas fa-copy"></i> COPY LINK
                 </button>
-                <button class="btn-secondary" onclick="window.open(document.getElementById('uploadLink').textContent, '_blank')">
+                <button class="btn-secondary" onclick="window.open(lastUploadedLink, '_blank')">
                     <i class="fas fa-external-link-alt"></i> OPEN LINK
                 </button>
             </div>
             
-            <div style="margin-top: 15px; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px; font-size: 0.9em;">
-                <i class="fas fa-crown" style="color: #764ba2;"></i> DEVELOPED BY <strong>@TH3Cen_cee</strong>
+            <div class="developer-credit">
+                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
             </div>
         </div>
         
@@ -277,6 +274,9 @@ function getGmailToolHTML() {
             <button class="btn-secondary" style="margin-top: 15px; width: 100%;" onclick="exportAccounts()">
                 <i class="fas fa-download"></i> EXPORT AS TXT
             </button>
+            <div class="developer-credit">
+                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+            </div>
         </div>
         
         <div id="gmailError" class="error-message" style="display: none;"></div>
@@ -313,140 +313,13 @@ function getLinkToolHTML() {
                 <i class="fas fa-clipboard-check"></i> SCAN RESULTS
             </div>
             <div id="linkInfo" class="result-content"></div>
+            <div class="developer-credit">
+                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+            </div>
         </div>
         
         <div id="linkError" class="error-message" style="display: none;"></div>
     `;
-}
-
-// Upload to Cloud Function
-let lastUploadedLink = '';
-let lastQRCodeData = '';
-
-async function uploadToCloud() {
-    const fileInput = document.getElementById('uploadFileInput');
-    
-    if (!fileInput.files || fileInput.files.length === 0) {
-        showError('uploadError', '⚠️ PLEASE SELECT A FILE');
-        return;
-    }
-
-    const file = fileInput.files[0];
-    
-    // Check file size (limit to 50MB for free API)
-    if (file.size > 50 * 1024 * 1024) {
-        showError('uploadError', '⚠️ FILE TOO LARGE (MAX 50MB)');
-        return;
-    }
-
-    showLoading('uploadLoading', true);
-    hideElement('uploadResult');
-    hideElement('uploadError');
-    hideElement('qrCodeContainer');
-
-    try {
-        // Create form data
-        const formData = new FormData();
-        formData.append('reqtype', 'fileupload');
-        formData.append('fileToUpload', file);
-
-        // Show upload progress
-        const xhr = new XMLHttpRequest();
-        
-        xhr.upload.addEventListener('progress', (e) => {
-            if (e.lengthComputable) {
-                const percent = Math.round((e.loaded / e.total) * 100);
-                document.querySelector('#uploadLoading span').textContent = `UPLOADING... ${percent}%`;
-            }
-        });
-
-        // Create promise for upload
-        const uploadPromise = new Promise((resolve, reject) => {
-            xhr.open('POST', 'https://catbox.moe/user/api.php', true);
-            
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    resolve(xhr.responseText);
-                } else {
-                    reject(new Error('Upload failed'));
-                }
-            };
-            
-            xhr.onerror = () => reject(new Error('Network error'));
-            xhr.send(formData);
-        });
-
-        // Wait for upload to complete
-        const link = await uploadPromise;
-        
-        if (!link || !link.startsWith('https://')) {
-            throw new Error('Invalid response from server');
-        }
-
-        lastUploadedLink = link;
-
-        // Display upload info
-        let fileType = 'FILE';
-        if (file.type.startsWith('image/')) fileType = 'IMAGE';
-        else if (file.type.startsWith('video/')) fileType = 'VIDEO';
-        else if (file.type.startsWith('audio/')) fileType = 'AUDIO';
-        else if (file.type.includes('pdf')) fileType = 'PDF';
-        else if (file.type.includes('text')) fileType = 'TEXT';
-
-        const uploadInfo = `
-            <div style="margin-bottom: 15px;">
-                <strong>${fileType} UPLOADED</strong><br>
-                <small style="color: #666;">${file.name}</small><br>
-                <small>Size: ${(file.size / 1024).toFixed(2)} KB</small>
-            </div>
-            <div id="uploadLink">${link}</div>
-        `;
-
-        document.getElementById('uploadInfo').innerHTML = uploadInfo;
-        document.getElementById('uploadLink').id = 'uploadLink'; // Ensure ID exists
-
-        // Generate QR code for images
-        if (file.type.startsWith('image/')) {
-            try {
-                // Use QRServer API
-                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(link)}`;
-                document.getElementById('qrCodeImage').src = qrUrl;
-                lastQRCodeData = qrUrl;
-                document.getElementById('qrCodeContainer').style.display = 'block';
-            } catch (qrError) {
-                console.log('QR generation failed:', qrError);
-            }
-        }
-
-        showElement('uploadResult');
-        
-    } catch (error) {
-        showError('uploadError', `⚠️ UPLOAD FAILED: ${error.message}`);
-    } finally {
-        showLoading('uploadLoading', false);
-    }
-}
-
-// Copy upload link
-async function copyUploadLink() {
-    if (!lastUploadedLink) return;
-    
-    try {
-        await navigator.clipboard.writeText(lastUploadedLink);
-        alert('✅ LINK COPIED!');
-    } catch (err) {
-        alert('❌ COPY FAILED');
-    }
-}
-
-// Download QR code
-function downloadQRCode() {
-    if (!lastQRCodeData) return;
-    
-    const link = document.createElement('a');
-    link.href = lastQRCodeData;
-    link.download = `qrcode_${Date.now()}.png`;
-    link.click();
 }
 
 // IP Lookup Function
@@ -485,6 +358,9 @@ async function lookupIP() {
                 <div><i class="fas fa-clock"></i> <strong>Timezone:</strong> ${ipData.timezone}</div>
                 <div><i class="fas fa-map-pin"></i> <strong>Coordinates:</strong> ${ipData.lat}, ${ipData.lon}</div>
             </div>
+            <div class="developer-credit" style="margin-top: 15px;">
+                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+            </div>
         `;
 
         document.getElementById('ipInfo').innerHTML = info;
@@ -507,6 +383,9 @@ async function lookupIP() {
                     <div><i class="fas fa-wifi"></i> <strong>ISP:</strong> ${fallbackData.org || 'N/A'}</div>
                     <div><i class="fas fa-clock"></i> <strong>Timezone:</strong> ${fallbackData.timezone}</div>
                     <div><i class="fas fa-map-pin"></i> <strong>Coordinates:</strong> ${fallbackData.latitude}, ${fallbackData.longitude}</div>
+                </div>
+                <div class="developer-credit" style="margin-top: 15px;">
+                    <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
                 </div>
             `;
             
@@ -557,10 +436,167 @@ async function shortenURL() {
 
     setTimeout(() => {
         const shortUrl = 'https://tinyurl.com/' + Math.random().toString(36).substring(2, 8);
-        document.getElementById('shortUrl').textContent = shortUrl;
+        document.getElementById('shortUrl').innerHTML = `
+            <div style="word-break: break-all;">${shortUrl}</div>
+            <div class="developer-credit" style="margin-top: 10px;">
+                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+            </div>
+        `;
         showElement('urlResult');
         showLoading('urlLoading', false);
     }, 1000);
+}
+
+// Upload to Cloud Function
+async function uploadToCloud() {
+    const fileInput = document.getElementById('uploadFileInput');
+    
+    if (!fileInput.files || fileInput.files.length === 0) {
+        showError('uploadError', '⚠️ PLEASE SELECT A FILE');
+        return;
+    }
+
+    const file = fileInput.files[0];
+    
+    if (file.size > 10 * 1024 * 1024) {
+        showError('uploadError', '⚠️ FILE TOO LARGE (MAX 10MB FOR WEB VERSION)');
+        return;
+    }
+
+    showLoading('uploadLoading', true);
+    hideElement('uploadResult');
+    hideElement('uploadError');
+    hideElement('qrCodeContainer');
+
+    try {
+        const formData = new FormData();
+        formData.append('reqtype', 'fileupload');
+        formData.append('fileToUpload', file);
+
+        const proxyUrl = 'https://api.allorigins.win/post?url=';
+        const targetUrl = 'https://catbox.moe/user/api.php';
+        
+        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        let link;
+        if (data.contents) {
+            link = data.contents;
+        } else {
+            link = data;
+        }
+
+        if (!link || typeof link !== 'string' || !link.startsWith('https://')) {
+            throw new Error('Invalid response from server');
+        }
+
+        link = link.replace(/"/g, '').trim();
+        lastUploadedLink = link;
+
+        let fileType = 'FILE';
+        if (file.type.startsWith('image/')) fileType = 'IMAGE';
+        else if (file.type.startsWith('video/')) fileType = 'VIDEO';
+        else if (file.type.startsWith('audio/')) fileType = 'AUDIO';
+        else if (file.type.includes('pdf')) fileType = 'PDF';
+        else if (file.type.includes('text')) fileType = 'TEXT';
+
+        const uploadInfo = `
+            <div style="margin-bottom: 15px;">
+                <strong style="color: #764ba2;">✅ ${fileType} UPLOADED SUCCESSFULLY!</strong><br>
+                <small style="color: #666;">${file.name}</small><br>
+                <small>Size: ${(file.size / 1024).toFixed(2)} KB</small>
+            </div>
+            <div style="background: #ff0f3ff; padding: 12px; border-radius: 8px; word-break: break-all; border: 1px solid #667eea30;">
+                <i class="fas fa-link" style="color: #667eea;"></i> ${link}
+            </div>
+            <div class="developer-credit" style="margin-top: 15px;">
+                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+            </div>
+        `;
+
+        document.getElementById('uploadInfo').innerHTML = uploadInfo;
+
+        if (file.type.startsWith('image/')) {
+            try {
+                const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(link)}`;
+                document.getElementById('qrCodeImage').src = qrApiUrl;
+                lastQRCodeData = qrApiUrl;
+                document.getElementById('qrCodeContainer').style.display = 'block';
+            } catch (qrError) {
+                console.log('QR generation failed:', qrError);
+            }
+        }
+
+        showElement('uploadResult');
+        
+    } catch (error) {
+        console.error('Upload error:', error);
+        
+        const errorMessage = `
+            <div style="text-align: center;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #f59e0b;"></i>
+                <h3 style="color: #f59e0b; margin: 10px 0;">WEB UPLOAD LIMITED</h3>
+                <p style="color: #666; margin-bottom: 15px;">Browser cannot upload directly due to security restrictions.</p>
+                <div style="background: #f0f3ff; padding: 15px; border-radius: 10px;">
+                    <p style="color: #667eea; margin-bottom: 10px;">
+                        <i class="fab fa-telegram"></i> USE TELEGRAM BOT INSTEAD:
+                    </p>
+                    <a href="https://t.me/Darknet_cen3bot" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 12px 25px; border-radius: 25px; text-decoration: none; font-weight: bold;">
+                        <i class="fab fa-telegram"></i> @Darknet_cen3bot
+                    </a>
+                </div>
+                <div class="developer-credit" style="margin-top: 15px;">
+                    <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('uploadInfo').innerHTML = errorMessage;
+        showElement('uploadResult');
+    } finally {
+        showLoading('uploadLoading', false);
+    }
+}
+
+// Copy upload link
+async function copyUploadLink() {
+    if (!lastUploadedLink) {
+        showError('uploadError', '⚠️ NO LINK TO COPY');
+        return;
+    }
+    
+    try {
+        await navigator.clipboard.writeText(lastUploadedLink);
+        alert('✅ LINK COPIED!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
+    } catch (err) {
+        const textArea = document.createElement('textarea');
+        textArea.value = lastUploadedLink;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('✅ LINK COPIED!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
+    }
+}
+
+// Download QR code
+function downloadQRCode() {
+    if (!lastQRCodeData) return;
+    
+    const link = document.createElement('a');
+    link.href = lastQRCodeData;
+    link.download = `qrcode_${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 // Gmail Generator Functions
@@ -568,7 +604,7 @@ function generateAccounts(amount) {
     showLoading('gmailLoading', true);
     hideElement('gmailResult');
     hideElement('gmailError');
-    let accounts = [];
+    accounts = [];
 
     setTimeout(() => {
         let html = `
@@ -598,6 +634,12 @@ function generateAccounts(amount) {
                 </div>
             `;
         }
+
+        html += `
+            <div class="developer-credit" style="margin-top: 15px;">
+                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+            </div>
+        `;
 
         document.getElementById('accountsList').innerHTML = html;
         showElement('gmailResult');
@@ -632,7 +674,7 @@ function generatePassword(length = 12) {
 
 function generateStrongPassword() {
     const password = generatePassword(24);
-    let accounts = [{email: 'STRONG PASSWORD', password}];
+    accounts = [{email: 'STRONG PASSWORD', password}];
     
     const html = `
         <div class="account-stats">
@@ -646,6 +688,9 @@ function generateStrongPassword() {
                 <i class="fas fa-lock"></i> ${password}
             </div>
         </div>
+        <div class="developer-credit" style="margin-top: 15px;">
+            <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+        </div>
     `;
     
     document.getElementById('accountsList').innerHTML = html;
@@ -657,7 +702,7 @@ function generateUsername() {
     const name = names[Math.floor(Math.random() * names.length)];
     const number = Math.floor(Math.random() * 9000) + 1000;
     const username = name + number;
-    let accounts = [{email: 'USERNAME', password: username}];
+    accounts = [{email: 'USERNAME', password: username}];
     
     const html = `
         <div class="account-stats">
@@ -671,6 +716,9 @@ function generateUsername() {
                 <i class="fas fa-user"></i> ${username}
             </div>
         </div>
+        <div class="developer-credit" style="margin-top: 15px;">
+            <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+        </div>
     `;
     
     document.getElementById('accountsList').innerHTML = html;
@@ -678,9 +726,30 @@ function generateUsername() {
 }
 
 function exportAccounts() {
-    const accounts = []; // This should be populated from the actual accounts
-    // This function needs to be fixed to work with the actual accounts data
-    showError('gmailError', '⚠️ FUNCTION UNDER MAINTENANCE');
+    if (accounts.length === 0) {
+        showError('gmailError', '⚠️ NO ACCOUNTS GENERATED YET');
+        return;
+    }
+
+    let text = 'GENERATED ACCOUNTS\n';
+    text += '===================\n';
+    text += 'DEVELOPED BY @TH3Cen_cee\n\n';
+    
+    accounts.forEach((acc, index) => {
+        text += `[${index + 1}] EMAIL: ${acc.email}\n`;
+        text += `    PASS: ${acc.password}\n`;
+        text += '-------------------\n';
+    });
+    
+    text += '\n⚡ HAKK TOOL ⚡ - DEVELOPED BY @TH3Cen_cee';
+
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `accounts_${Date.now()}.txt`;
+    a.click();
+    window.URL.revokeObjectURL(url);
 }
 
 // Link Checker Function
@@ -739,7 +808,6 @@ async function checkLink() {
             });
             resultHTML += '</div>';
             
-            // បន្ថែម Tips
             resultHTML += `
                 <div style="margin-top: 20px; padding: 12px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
                     <i class="fas fa-lightbulb" style="color: #fbbf24;"></i>
@@ -750,6 +818,9 @@ async function checkLink() {
                         <li>Be careful with shortened URLs (tinyurl, bit.ly)</li>
                         <li>If it looks too good to be true, it probably is</li>
                     </ul>
+                </div>
+                <div class="developer-credit" style="margin-top: 15px;">
+                    <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
                 </div>
             `;
             
@@ -773,7 +844,6 @@ function analyzeLink(link) {
     
     const linkLower = link.toLowerCase();
     
-    // 1. Check for suspicious keywords
     const phishingKeywords = [
         "login", "signin", "verify", "secure", "update", "confirm",
         "banking", "paypal", "amazon", "facebook", "google",
@@ -789,10 +859,9 @@ function analyzeLink(link) {
         }
     });
     
-    // 2. Check for suspicious TLDs
     const suspiciousTLDs = [
         ".xyz", ".top", ".club", ".online", ".site", ".live",
-        ".tk", ".ml", ".ga", ".cf", ".gq", // Free domains
+        ".tk", ".ml", ".ga", ".cf", ".gq",
         ".work", ".download", ".review", ".date", ".men"
     ];
     
@@ -807,14 +876,12 @@ function analyzeLink(link) {
             }
         });
         
-        // 3. Check for IP address instead of domain
         const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
         if (ipRegex.test(domain)) {
             result.warnings.push(`⚠️ Link uses IP address instead of domain name (common in scams)`);
             result.safe = false;
         }
         
-        // 4. Check for URL shorteners
         const shorteners = [
             "bit.ly", "tinyurl", "tiny.cc", "goo.gl", "ow.ly",
             "is.gd", "buff.ly", "adf.ly", "shorte.st", "cutt.ly"
@@ -827,13 +894,11 @@ function analyzeLink(link) {
             }
         });
         
-        // 5. Check for HTTPS
         if (!link.startsWith("https://")) {
             result.warnings.push(`⚠️ Website does not use HTTPS (not secure)`);
             result.safe = false;
         }
         
-        // 6. Check for suspicious paths
         const suspiciousPaths = [
             "/login.php", "/signin", "/verify", "/secure",
             "/update-info", "/confirm", "/wallet", "/payment"
@@ -846,14 +911,12 @@ function analyzeLink(link) {
             }
         });
         
-        // 7. Check for subdomains (too many)
         const subdomainCount = domain.split('.').length - 2;
         if (subdomainCount > 2) {
             result.warnings.push(`⚠️ Unusual number of subdomains (${subdomainCount})`);
             result.safe = false;
         }
         
-        // 8. Check for numbers in domain
         const numbersInDomain = (domain.match(/\d/g) || []).length;
         if (numbersInDomain > 5) {
             result.warnings.push(`⚠️ Unusual amount of numbers in domain (${numbersInDomain})`);
@@ -865,20 +928,17 @@ function analyzeLink(link) {
         result.safe = false;
     }
     
-    // 9. Check link length (very long links are suspicious)
     if (link.length > 200) {
         result.warnings.push(`⚠️ Very long URL (${link.length} characters)`);
         result.safe = false;
     }
     
-    // 10. Check for multiple special characters
     const specialChars = (link.match(/[%@!*$]/g) || []).length;
     if (specialChars > 5) {
         result.warnings.push(`⚠️ Unusual number of special characters (${specialChars})`);
         result.safe = false;
     }
     
-    // បើគ្មាន warnings ទេ បន្ថែម safe message
     if (result.warnings.length === 0) {
         result.warnings.push("✅ No suspicious patterns detected");
     }
@@ -911,7 +971,7 @@ function hideElement(elementId) {
 function showError(elementId, message) {
     const element = document.getElementById(elementId);
     if (element) {
-        element.innerHTML = message;
+        element.innerHTML = message + '<br><br><span style="font-size:0.9em;"><i class="fas fa-crown"></i> DEVELOPED BY @TH3Cen_cee</span>';
         element.style.display = 'block';
         
         setTimeout(() => {
@@ -921,11 +981,25 @@ function showError(elementId, message) {
 }
 
 async function copyToClipboard(elementId) {
-    const text = document.getElementById(elementId).textContent;
+    const element = document.getElementById(elementId);
+    let text = '';
+    
+    if (element.tagName === 'DIV') {
+        text = element.textContent || element.innerText;
+    } else {
+        text = element.textContent;
+    }
+    
+    // យកតែ link សុទ្ធ (មិនយក DEVELOPED BY)
+    const linkMatch = text.match(/https?:\/\/[^\s]+/);
+    if (linkMatch) {
+        text = linkMatch[0];
+    }
+    
     try {
         await navigator.clipboard.writeText(text);
-        alert('✅ LINK COPIED!');
+        alert('✅ LINK COPIED!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
     } catch (err) {
-        alert('❌ COPY FAILED');
+        alert('❌ COPY FAILED\n\n⚡ DEVELOPED BY @TH3Cen_cee');
     }
-}
+            }
