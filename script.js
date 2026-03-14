@@ -35,17 +35,11 @@ function loadToolContent(tool) {
         case 'ip':
             container.innerHTML = getIPToolHTML();
             break;
-        case 'url':
-            container.innerHTML = getURLToolHTML();
-            break;
-        case 'upload':
-            container.innerHTML = getUploadToolHTML();
+        case 'link':
+            container.innerHTML = getLinkToolHTML();
             break;
         case 'gmail':
             container.innerHTML = getGmailToolHTML();
-            break;
-        case 'link':
-            container.innerHTML = getLinkToolHTML();
             break;
     }
 }
@@ -91,137 +85,6 @@ function getIPToolHTML() {
         </div>
         
         <div id="ipError" class="error-message" style="display: none;"></div>
-    `;
-}
-
-// URL Shortener Tool HTML
-function getURLToolHTML() {
-    return `
-        <div class="tool-header">
-            <div class="tool-icon">🔗</div>
-            <div class="tool-title">
-                <h2>URL SHORTENER</h2>
-                <p>>_ Make long URLs short</p>
-            </div>
-        </div>
-        
-        <div class="input-group">
-            <label><i class="fas fa-link"></i> ENTER LONG URL :</label>
-            <input type="url" id="urlInput" class="input-field" placeholder="https://example.com/very/long/url">
-        </div>
-        
-        <button class="btn-primary" onclick="shortenURL()">
-            <i class="fas fa-compress-alt"></i> SHORTEN URL
-        </button>
-        
-        <div id="urlLoading" class="loading" style="display: none;">
-            <div class="spinner"></div>
-            <span>GENERATING SHORT LINK...</span>
-        </div>
-        
-        <div id="urlResult" class="result-box" style="display: none;">
-            <div class="result-title">
-                <i class="fas fa-check-circle"></i> SHORT LINK READY
-            </div>
-            <div id="shortUrl" class="result-content"></div>
-            <button class="btn-secondary" style="margin-top: 15px; width: 100%;" onclick="copyToClipboard('shortUrl')">
-                <i class="fas fa-copy"></i> COPY LINK
-            </button>
-            <div class="developer-credit">
-                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
-            </div>
-        </div>
-        
-        <div id="urlError" class="error-message" style="display: none;"></div>
-    `;
-}
-
-// UPLOAD TOOL HTML (ដំណើរការផ្ទាល់ក្នុង Web App)
-function getUploadToolHTML() {
-    return `
-        <div class="tool-header">
-            <div class="tool-icon">☁️</div>
-            <div class="tool-title">
-                <h2>CLOUD UPLOAD</h2>
-                <p>>_ Upload files & get direct link</p>
-            </div>
-        </div>
-        
-        <div class="info-box" style="background: #f0f3ff; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-            <p style="color: #667eea; margin-bottom: 10px;">
-                <i class="fas fa-info-circle"></i> Supported Files:
-            </p>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                <span style="background: white; padding: 5px 12px; border-radius: 20px; font-size: 0.9em;">
-                    <i class="fas fa-image" style="color: #667eea;"></i> Images
-                </span>
-                <span style="background: white; padding: 5px 12px; border-radius: 20px; font-size: 0.9em;">
-                    <i class="fas fa-video" style="color: #667eea;"></i> Videos
-                </span>
-                <span style="background: white; padding: 5px 12px; border-radius: 20px; font-size: 0.9em;">
-                    <i class="fas fa-file-alt" style="color: #667eea;"></i> Documents
-                </span>
-                <span style="background: white; padding: 5px 12px; border-radius: 20px; font-size: 0.9em;">
-                    <i class="fas fa-music" style="color: #667eea;"></i> Audio
-                </span>
-                <span style="background: white; padding: 5px 12px; border-radius: 20px; font-size: 0.9em;">
-                    <i class="fas fa-archive" style="color: #667eea;"></i> ZIP/RAR
-                </span>
-            </div>
-            <p style="color: #f59e0b; margin-top: 10px; font-size: 0.9em;">
-                <i class="fas fa-exclamation-triangle"></i> Max file size: 10MB
-            </p>
-        </div>
-        
-        <div class="input-group">
-            <label><i class="fas fa-cloud-upload-alt"></i> SELECT FILE TO UPLOAD :</label>
-            <input type="file" id="uploadFileInput" class="input-field" accept="*/*">
-        </div>
-        
-        <div class="button-group">
-            <button class="btn-primary" onclick="uploadToCloud()" style="width: 100%;">
-                <i class="fas fa-cloud-upload-alt"></i> UPLOAD TO CLOUD
-            </button>
-        </div>
-        
-        <div id="uploadLoading" class="loading" style="display: none;">
-            <div class="spinner"></div>
-            <span>UPLOADING TO CLOUD...</span>
-        </div>
-        
-        <div id="uploadResult" class="result-box" style="display: none;">
-            <div class="result-title">
-                <i class="fas fa-check-circle"></i> UPLOAD SUCCESSFUL
-            </div>
-            <div id="uploadInfo" class="result-content" style="text-align: center;"></div>
-            
-            <div id="qrCodeContainer" style="display: none; text-align: center; margin-top: 20px;">
-                <div class="result-title">
-                    <i class="fas fa-qrcode"></i> QR CODE
-                </div>
-                <div style="margin: 15px 0;">
-                    <img id="qrCodeImage" src="" alt="QR Code" style="max-width: 200px; border: 3px solid white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
-                </div>
-                <button class="btn-secondary" onclick="downloadQRCode()">
-                    <i class="fas fa-download"></i> DOWNLOAD QR
-                </button>
-            </div>
-            
-            <div class="button-group" style="margin-top: 20px;">
-                <button class="btn-secondary" onclick="copyUploadLink()">
-                    <i class="fas fa-copy"></i> COPY LINK
-                </button>
-                <button class="btn-secondary" onclick="window.open(lastUploadedLink, '_blank')">
-                    <i class="fas fa-external-link-alt"></i> OPEN LINK
-                </button>
-            </div>
-            
-            <div class="developer-credit">
-                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
-            </div>
-        </div>
-        
-        <div id="uploadError" class="error-message" style="display: none;"></div>
     `;
 }
 
@@ -316,7 +179,7 @@ function getLinkToolHTML() {
         
         <div id="linkError" class="error-message" style="display: none;"></div>
     `;
-        }
+}
 
 // IP Lookup Function
 async function lookupIP() {
@@ -410,192 +273,6 @@ async function getMyIP() {
         showError('ipError', '⚠️ CANNOT GET YOUR IP');
         showLoading('ipLoading', false);
     }
-}
-
-// URL Shortener Function
-async function shortenURL() {
-    const url = document.getElementById('urlInput').value.trim();
-    
-    if (!url) {
-        showError('urlError', '⚠️ PLEASE ENTER URL');
-        return;
-    }
-
-    if (!url.startsWith('http')) {
-        showError('urlError', '⚠️ URL MUST START WITH http:// OR https://');
-        return;
-    }
-
-    showLoading('urlLoading', true);
-    hideElement('urlResult');
-    hideElement('urlError');
-
-    setTimeout(() => {
-        const shortUrl = 'https://tinyurl.com/' + Math.random().toString(36).substring(2, 8);
-        document.getElementById('shortUrl').innerHTML = `
-            <div style="word-break: break-all;">${shortUrl}</div>
-            <div class="developer-credit" style="margin-top: 10px;">
-                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
-            </div>
-        `;
-        showElement('urlResult');
-        showLoading('urlLoading', false);
-    }, 1000);
-}
-
-// Upload to Cloud Function
-async function uploadToCloud() {
-    const fileInput = document.getElementById('uploadFileInput');
-    
-    if (!fileInput.files || fileInput.files.length === 0) {
-        showError('uploadError', '⚠️ PLEASE SELECT A FILE');
-        return;
-    }
-
-    const file = fileInput.files[0];
-    
-    if (file.size > 10 * 1024 * 1024) {
-        showError('uploadError', '⚠️ FILE TOO LARGE (MAX 10MB)');
-        return;
-    }
-
-    showLoading('uploadLoading', true);
-    hideElement('uploadResult');
-    hideElement('uploadError');
-    hideElement('qrCodeContainer');
-
-    try {
-        const formData = new FormData();
-        formData.append('reqtype', 'fileupload');
-        formData.append('fileToUpload', file);
-
-        // ប្រើ API របស់ catbox.moe តាមរយៈ proxy
-        const proxyUrl = 'https://api.allorigins.win/post?url=';
-        const targetUrl = 'https://catbox.moe/user/api.php';
-        
-        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
-            method: 'POST',
-            body: formData
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        
-        let link;
-        if (data.contents) {
-            link = data.contents;
-        } else {
-            link = data;
-        }
-
-        if (!link || typeof link !== 'string' || !link.startsWith('https://')) {
-            throw new Error('Invalid response from server');
-        }
-
-        link = link.replace(/"/g, '').trim();
-        lastUploadedLink = link;
-
-        let fileType = 'FILE';
-        if (file.type.startsWith('image/')) fileType = 'IMAGE';
-        else if (file.type.startsWith('video/')) fileType = 'VIDEO';
-        else if (file.type.startsWith('audio/')) fileType = 'AUDIO';
-        else if (file.type.includes('pdf')) fileType = 'PDF';
-        else if (file.type.includes('text')) fileType = 'TEXT';
-
-        const uploadInfo = `
-            <div style="margin-bottom: 15px;">
-                <strong style="color: #764ba2;">✅ ${fileType} UPLOADED SUCCESSFULLY!</strong><br>
-                <small style="color: #666;">${file.name}</small><br>
-                <small>Size: ${(file.size / 1024).toFixed(2)} KB</small>
-            </div>
-            <div style="background: #f0f3ff; padding: 12px; border-radius: 8px; word-break: break-all; border: 1px solid #667eea30;">
-                <i class="fas fa-link" style="color: #667eea;"></i> ${link}
-            </div>
-            <div class="developer-credit" style="margin-top: 15px;">
-                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
-            </div>
-        `;
-
-        document.getElementById('uploadInfo').innerHTML = uploadInfo;
-
-        // បង្កើត QR Code សម្រាប់រូបភាព
-        if (file.type.startsWith('image/')) {
-            try {
-                const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(link)}`;
-                document.getElementById('qrCodeImage').src = qrApiUrl;
-                lastQRCodeData = qrApiUrl;
-                document.getElementById('qrCodeContainer').style.display = 'block';
-            } catch (qrError) {
-                console.log('QR generation failed:', qrError);
-            }
-        }
-
-        showElement('uploadResult');
-        
-    } catch (error) {
-        console.error('Upload error:', error);
-        
-        // បង្ហាញជម្រើស Telegram Bot ពេល Upload មិនជោគជ័យ
-        const errorMessage = `
-            <div style="text-align: center;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #f59e0b;"></i>
-                <h3 style="color: #f59e0b; margin: 10px 0;">WEB UPLOAD LIMITED</h3>
-                <p style="color: #666; margin-bottom: 15px;">Browser cannot upload directly due to security restrictions.</p>
-                <div style="background: #f0f3ff; padding: 15px; border-radius: 10px;">
-                    <p style="color: #667eea; margin-bottom: 10px;">
-                        <i class="fab fa-telegram"></i> USE TELEGRAM BOT INSTEAD:
-                    </p>
-                    <a href="https://t.me/Darknet_cen3bot" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 12px 25px; border-radius: 25px; text-decoration: none; font-weight: bold;">
-                        <i class="fab fa-telegram"></i> @Darknet_cen3bot
-                    </a>
-                </div>
-                <div class="developer-credit" style="margin-top: 15px;">
-                    <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
-                </div>
-            </div>
-        `;
-        
-        document.getElementById('uploadInfo').innerHTML = errorMessage;
-        showElement('uploadResult');
-    } finally {
-        showLoading('uploadLoading', false);
-    }
-}
-
-// Copy upload link
-async function copyUploadLink() {
-    if (!lastUploadedLink) {
-        showError('uploadError', '⚠️ NO LINK TO COPY');
-        return;
-    }
-    
-    try {
-        await navigator.clipboard.writeText(lastUploadedLink);
-        alert('✅ LINK COPIED!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
-    } catch (err) {
-        const textArea = document.createElement('textarea');
-        textArea.value = lastUploadedLink;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        alert('✅ LINK COPIED!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
-    }
-}
-
-// Download QR code
-function downloadQRCode() {
-    if (!lastQRCodeData) return;
-    
-    const link = document.createElement('a');
-    link.href = lastQRCodeData;
-    link.download = `qrcode_${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
 }
 
 // Gmail Generator Functions
@@ -752,7 +429,7 @@ function exportAccounts() {
 }
 
 // Link Checker Function
-async function checkLink() {
+function checkLink() {
     const link = document.getElementById('linkInput').value.trim();
     
     if (!link) {
@@ -843,7 +520,7 @@ function analyzeLink(link) {
     
     const linkLower = link.toLowerCase();
     
-    const phishiingKeywords = [
+    const phishingKeywords = [
         "login", "signin", "verify", "secure", "update", "confirm",
         "banking", "paypal", "amazon", "facebook", "google",
         "free", "bonus", "gift", "prize", "winner", "claim", 
@@ -859,7 +536,7 @@ function analyzeLink(link) {
     });
     
     const suspiciousTLDs = [
-        ".xyz", ".top", ".club", ".online", ".site", ".live",
+      ".xyz", ".top", ".club", ".online", ".site", ".live",
         ".tk", ".ml", ".ga", ".cf", ".gq",
         ".work", ".download", ".review", ".date", ".men"
     ];
@@ -1001,4 +678,4 @@ async function copyToClipboard(elementId) {
     } catch (err) {
         alert('❌ COPY FAILED\n\n⚡ DEVELOPED BY @TH3Cen_cee');
     }
-        }
+            }
