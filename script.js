@@ -39,7 +39,7 @@ function loadToolContent(tool) {
             container.innerHTML = getURLToolHTML();
             break;
         case 'upload':
-            container.innerHTML = getUploadBotToolHTML();
+            container.innerHTML = getUploadToolHTML();
             break;
         case 'gmail':
             container.innerHTML = getGmailToolHTML();
@@ -136,164 +136,92 @@ function getURLToolHTML() {
     `;
 }
 
-// UPLOAD BOT TOOL HTML (ជំនួស QR Tool)
-function getUploadBotToolHTML() {
+// UPLOAD TOOL HTML (ដំណើរការផ្ទាល់ក្នុង Web App)
+function getUploadToolHTML() {
     return `
         <div class="tool-header">
-            <div class="tool-icon">🤖</div>
+            <div class="tool-icon">☁️</div>
             <div class="tool-title">
-                <h2>TELEGRAM UPLOAD BOT</h2>
-                <p>>_ Upload files via Telegram Bot</p>
+                <h2>CLOUD UPLOAD</h2>
+                <p>>_ Upload files & get direct link</p>
             </div>
         </div>
         
-        <div class="info-box" style="background: linear-gradient(135deg, #667eea20, #764ba220); padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 2px solid #667eea30;">
-            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                <div style="font-size: 48px;">
-                    <i class="fab fa-telegram" style="color: #0088cc;"></i>
-                </div>
-                <div style="flex: 1;">
-                    <h3 style="color: #764ba2; margin-bottom: 10px;">
-                        <i class="fas fa-robot"></i> @Darknet_cen3bot
-                    </h3>
-                    <p style="color: #666; margin-bottom: 5px;">
-                        <i class="fas fa-check-circle" style="color: #10b981;"></i> No file size limit
-                    </p>
-                    <p style="color: #666; margin-bottom: 5px;">
-                        <i class="fas fa-check-circle" style="color: #10b981;"></i> Get direct download link
-                    </p>
-                    <p style="color: #666; margin-bottom: 5px;">
-                        <i class="fas fa-check-circle" style="color: #10b981;"></i> Auto QR code for images
-                    </p>
-                    <p style="color: #666;">
-                        <i class="fas fa-check-circle" style="color: #10b981;"></i> Support all file types
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="upload-alternative" style="background: white; border: 2px solid #667eea;">
-            <p style="font-size: 1.2em; color: #764ba2; margin-bottom: 20px;">
-                <i class="fas fa-cloud-upload-alt"></i> CLICK BUTTON BELOW TO UPLOAD
+        <div class="info-box" style="background: #f0f3ff; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+            <p style="color: #667eea; margin-bottom: 10px;">
+                <i class="fas fa-info-circle"></i> Supported Files:
             </p>
-            
-            <a href="https://t.me/Darknet_cen3bot" target="_blank" class="telegram-bot-btn" style="font-size: 1.3em; padding: 20px;">
-                <i class="fab fa-telegram"></i> OPEN @Darknet_cen3bot
-            </a>
-            
-            <div style="margin-top: 25px; padding: 20px; background: #f0f3ff; border-radius: 10px;">
-                <p style="color: #667eea; font-weight: bold; margin-bottom: 15px;">
-                    <i class="fas fa-info-circle"></i> HOW TO USE:
-                </p>
-                <div style="display: flex; flex-direction: column; gap: 12px; text-align: left;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="background: #667eea; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</span>
-                        <span>Click the Telegram button above</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="background: #667eea; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</span>
-                        <span>Start the bot with /start</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="background: #667eea; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</span>
-                        <span>Send any file (image, video, document)</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="background: #667eea; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">4</span>
-                        <span>Get instant direct link + QR code</span>
-                    </div>
-                </div>
-            </div>
-
-            <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-                <span style="background: #e8f5e9; color: #2e7d32; padding: 5px 15px; border-radius: 20px;">
-                    <i class="fas fa-image"></i> Images
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <span style="background: white; padding: 5px 12px; border-radius: 20px; font-size: 0.9em;">
+                    <i class="fas fa-image" style="color: #667eea;"></i> Images
                 </span>
-                <span style="background: #e3f2fd; color: #1565c0; padding: 5px 15px; border-radius: 20px;">
-                    <i class="fas fa-video"></i> Videos
+                <span style="background: white; padding: 5px 12px; border-radius: 20px; font-size: 0.9em;">
+                    <i class="fas fa-video" style="color: #667eea;"></i> Videos
                 </span>
-                <span style="background: #fff3e0; color: #e65100; padding: 5px 15px; border-radius: 20px;">
-                    <i class="fas fa-file-alt"></i> Documents
+                <span style="background: white; padding: 5px 12px; border-radius: 20px; font-size: 0.9em;">
+                    <i class="fas fa-file-alt" style="color: #667eea;"></i> Documents
                 </span>
-                <span style="background: #f3e5f5; color: #6a1b9a; padding: 5px 15px; border-radius: 20px;">
-                    <i class="fas fa-music"></i> Audio
+                <span style="background: white; padding: 5px 12px; border-radius: 20px; font-size: 0.9em;">
+                    <i class="fas fa-music" style="color: #667eea;"></i> Audio
                 </span>
-                <span style="background: #e0f2f1; color: #00695c; padding: 5px 15px; border-radius: 20px;">
-                    <i class="fas fa-archive"></i> ZIP/RAR
+                <span style="background: white; padding: 5px 12px; border-radius: 20px; font-size: 0.9em;">
+                    <i class="fas fa-archive" style="color: #667eea;"></i> ZIP/RAR
                 </span>
             </div>
+            <p style="color: #f59e0b; margin-top: 10px; font-size: 0.9em;">
+                <i class="fas fa-exclamation-triangle"></i> Max file size: 10MB
+            </p>
         </div>
-
-        <div class="result-box" style="margin-top: 25px;">
-            <div class="result-title">
-                <i class="fas fa-code"></i> BOT SOURCE CODE (upload.v1.py)
-            </div>
-            <div style="background: #1e1e2f; color: #fff; padding: 15px; border-radius: 8px; overflow-x: auto;">
-                <pre style="margin: 0; font-family: 'Courier New', monospace; font-size: 12px;">
-import requests
-from telegram import Update
-from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, filters, ContextTypes
-
-TOKEN = "7269793708:AAEKH2Gf5uVUo1aaSV7KNS8Bxe02uJeLnaY"
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Send me image or video. I will create direct link.")
-
-async def upload_file(file_path):
-    url = "https://catbox.moe/user/api.php"
-
-    files = {
-        "fileToUpload": open(file_path, "rb")
-    }
-
-    data = {
-        "reqtype": "fileupload"
-    }
-
-    r = requests.post(url, files=files, data=data)
-    return r.text
-
-async def handle_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    file = None
-    filename = ""
-
-    if update.message.photo:
-        file = await update.message.photo[-1].get_file()
-        filename = "image.jpg"
-
-    elif update.message.video:
-        file = await update.message.video.get_file()
-        filename = "video.mp4"
-
-    else:
-        await update.message.reply_text("Send image or video only.")
-        return
-
-    await file.download_to_drive(filename)
-
-    await update.message.reply_text("Uploading...")
-
-    link = await upload_file(filename)
-
-    await update.message.reply_text(f"Your Direct Link:\n{link}")
-
-app = ApplicationBuilder().token(TOKEN).build()
-
-app.add_handler(CommandHandler("start", start))
-app.add_handler(MessageHandler(filters.PHOTO | filters.VIDEO, handle_media))
-
-print("Bot running...")
-app.run_polling()
-                </pre>
-            </div>
-            <button class="btn-secondary" style="margin-top: 15px; width: 100%;" onclick="copyBotCode()">
-                <i class="fas fa-copy"></i> COPY BOT CODE
+        
+        <div class="input-group">
+            <label><i class="fas fa-cloud-upload-alt"></i> SELECT FILE TO UPLOAD :</label>
+            <input type="file" id="uploadFileInput" class="input-field" accept="*/*">
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-primary" onclick="uploadToCloud()" style="width: 100%;">
+                <i class="fas fa-cloud-upload-alt"></i> UPLOAD TO CLOUD
             </button>
-            <div class="developer-credit" style="margin-top: 15px;">
+        </div>
+        
+        <div id="uploadLoading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <span>UPLOADING TO CLOUD...</span>
+        </div>
+        
+        <div id="uploadResult" class="result-box" style="display: none;">
+            <div class="result-title">
+                <i class="fas fa-check-circle"></i> UPLOAD SUCCESSFUL
+            </div>
+            <div id="uploadInfo" class="result-content" style="text-align: center;"></div>
+            
+            <div id="qrCodeContainer" style="display: none; text-align: center; margin-top: 20px;">
+                <div class="result-title">
+                    <i class="fas fa-qrcode"></i> QR CODE
+                </div>
+                <div style="margin: 15px 0;">
+                    <img id="qrCodeImage" src="" alt="QR Code" style="max-width: 200px; border: 3px solid white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+                </div>
+                <button class="btn-secondary" onclick="downloadQRCode()">
+                    <i class="fas fa-download"></i> DOWNLOAD QR
+                </button>
+            </div>
+            
+            <div class="button-group" style="margin-top: 20px;">
+                <button class="btn-secondary" onclick="copyUploadLink()">
+                    <i class="fas fa-copy"></i> COPY LINK
+                </button>
+                <button class="btn-secondary" onclick="window.open(lastUploadedLink, '_blank')">
+                    <i class="fas fa-external-link-alt"></i> OPEN LINK
+                </button>
+            </div>
+            
+            <div class="developer-credit">
                 <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
             </div>
         </div>
+        
+        <div id="uploadError" class="error-message" style="display: none;"></div>
     `;
 }
 
@@ -388,7 +316,7 @@ function getLinkToolHTML() {
         
         <div id="linkError" class="error-message" style="display: none;"></div>
     `;
-}
+        }
 
 // IP Lookup Function
 async function lookupIP() {
@@ -513,6 +441,161 @@ async function shortenURL() {
         showElement('urlResult');
         showLoading('urlLoading', false);
     }, 1000);
+}
+
+// Upload to Cloud Function
+async function uploadToCloud() {
+    const fileInput = document.getElementById('uploadFileInput');
+    
+    if (!fileInput.files || fileInput.files.length === 0) {
+        showError('uploadError', '⚠️ PLEASE SELECT A FILE');
+        return;
+    }
+
+    const file = fileInput.files[0];
+    
+    if (file.size > 10 * 1024 * 1024) {
+        showError('uploadError', '⚠️ FILE TOO LARGE (MAX 10MB)');
+        return;
+    }
+
+    showLoading('uploadLoading', true);
+    hideElement('uploadResult');
+    hideElement('uploadError');
+    hideElement('qrCodeContainer');
+
+    try {
+        const formData = new FormData();
+        formData.append('reqtype', 'fileupload');
+        formData.append('fileToUpload', file);
+
+        // ប្រើ API របស់ catbox.moe តាមរយៈ proxy
+        const proxyUrl = 'https://api.allorigins.win/post?url=';
+        const targetUrl = 'https://catbox.moe/user/api.php';
+        
+        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        let link;
+        if (data.contents) {
+            link = data.contents;
+        } else {
+            link = data;
+        }
+
+        if (!link || typeof link !== 'string' || !link.startsWith('https://')) {
+            throw new Error('Invalid response from server');
+        }
+
+        link = link.replace(/"/g, '').trim();
+        lastUploadedLink = link;
+
+        let fileType = 'FILE';
+        if (file.type.startsWith('image/')) fileType = 'IMAGE';
+        else if (file.type.startsWith('video/')) fileType = 'VIDEO';
+        else if (file.type.startsWith('audio/')) fileType = 'AUDIO';
+        else if (file.type.includes('pdf')) fileType = 'PDF';
+        else if (file.type.includes('text')) fileType = 'TEXT';
+
+        const uploadInfo = `
+            <div style="margin-bottom: 15px;">
+                <strong style="color: #764ba2;">✅ ${fileType} UPLOADED SUCCESSFULLY!</strong><br>
+                <small style="color: #666;">${file.name}</small><br>
+                <small>Size: ${(file.size / 1024).toFixed(2)} KB</small>
+            </div>
+            <div style="background: #f0f3ff; padding: 12px; border-radius: 8px; word-break: break-all; border: 1px solid #667eea30;">
+                <i class="fas fa-link" style="color: #667eea;"></i> ${link}
+            </div>
+            <div class="developer-credit" style="margin-top: 15px;">
+                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+            </div>
+        `;
+
+        document.getElementById('uploadInfo').innerHTML = uploadInfo;
+
+        // បង្កើត QR Code សម្រាប់រូបភាព
+        if (file.type.startsWith('image/')) {
+            try {
+                const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(link)}`;
+                document.getElementById('qrCodeImage').src = qrApiUrl;
+                lastQRCodeData = qrApiUrl;
+                document.getElementById('qrCodeContainer').style.display = 'block';
+            } catch (qrError) {
+                console.log('QR generation failed:', qrError);
+            }
+        }
+
+        showElement('uploadResult');
+        
+    } catch (error) {
+        console.error('Upload error:', error);
+        
+        // បង្ហាញជម្រើស Telegram Bot ពេល Upload មិនជោគជ័យ
+        const errorMessage = `
+            <div style="text-align: center;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #f59e0b;"></i>
+                <h3 style="color: #f59e0b; margin: 10px 0;">WEB UPLOAD LIMITED</h3>
+                <p style="color: #666; margin-bottom: 15px;">Browser cannot upload directly due to security restrictions.</p>
+                <div style="background: #f0f3ff; padding: 15px; border-radius: 10px;">
+                    <p style="color: #667eea; margin-bottom: 10px;">
+                        <i class="fab fa-telegram"></i> USE TELEGRAM BOT INSTEAD:
+                    </p>
+                    <a href="https://t.me/Darknet_cen3bot" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 12px 25px; border-radius: 25px; text-decoration: none; font-weight: bold;">
+                        <i class="fab fa-telegram"></i> @Darknet_cen3bot
+                    </a>
+                </div>
+                <div class="developer-credit" style="margin-top: 15px;">
+                    <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('uploadInfo').innerHTML = errorMessage;
+        showElement('uploadResult');
+    } finally {
+        showLoading('uploadLoading', false);
+    }
+}
+
+// Copy upload link
+async function copyUploadLink() {
+    if (!lastUploadedLink) {
+        showError('uploadError', '⚠️ NO LINK TO COPY');
+        return;
+    }
+    
+    try {
+        await navigator.clipboard.writeText(lastUploadedLink);
+        alert('✅ LINK COPIED!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
+    } catch (err) {
+        const textArea = document.createElement('textarea');
+        textArea.value = lastUploadedLink;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('✅ LINK COPIED!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
+    }
+}
+
+// Download QR code
+function downloadQRCode() {
+    if (!lastQRCodeData) return;
+    
+    const link = document.createElement('a');
+    link.href = lastQRCodeData;
+    link.download = `qrcode_${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 // Gmail Generator Functions
@@ -760,7 +843,7 @@ function analyzeLink(link) {
     
     const linkLower = link.toLowerCase();
     
-    const phishingKeywords = [
+    const phishiingKeywords = [
         "login", "signin", "verify", "secure", "update", "confirm",
         "banking", "paypal", "amazon", "facebook", "google",
         "free", "bonus", "gift", "prize", "winner", "claim", 
@@ -862,72 +945,6 @@ function analyzeLink(link) {
     return result;
 }
 
-// Copy Bot Code
-async function copyBotCode() {
-    const code = `import requests
-from telegram import Update
-from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, filters, ContextTypes
-
-TOKEN = "7269793708:AAEKH2Gf5uVUo1aaSV7KNS8Bxe02uJeLnaY"
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Send me image or video. I will create direct link.")
-
-async def upload_file(file_path):
-    url = "https://catbox.moe/user/api.php"
-
-    files = {
-        "fileToUpload": open(file_path, "rb")
-    }
-
-    data = {
-        "reqtype": "fileupload"
-    }
-
-    r = requests.post(url, files=files, data=data)
-    return r.text
-
-async def handle_media(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    file = None
-    filename = ""
-
-    if update.message.photo:
-        file = await update.message.photo[-1].get_file()
-        filename = "image.jpg"
-
-    elif update.message.video:
-        file = await update.message.video.get_file()
-        filename = "video.mp4"
-
-    else:
-        await update.message.reply_text("Send image or video only.")
-        return
-
-    await file.download_to_drive(filename)
-
-    await update.message.reply_text("Uploading...")
-
-    link = await upload_file(filename)
-
-    await update.message.reply_text(f"Your Direct Link:\n{link}")
-
-app = ApplicationBuilder().token(TOKEN).build()
-
-app.add_handler(CommandHandler("start", start))
-app.add_handler(MessageHandler(filters.PHOTO | filters.VIDEO, handle_media))
-
-print("Bot running...")
-app.run_polling()`;
-
-    try {
-        await navigator.clipboard.writeText(code);
-        alert('✅ BOT CODE COPIED!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
-    } catch (err) {
-        alert('❌ COPY FAILED\n\n⚡ DEVELOPED BY @TH3Cen_cee');
-    }
-}
-
 // Utility Functions
 function showLoading(elementId, show) {
     const element = document.getElementById(elementId);
@@ -984,4 +1001,4 @@ async function copyToClipboard(elementId) {
     } catch (err) {
         alert('❌ COPY FAILED\n\n⚡ DEVELOPED BY @TH3Cen_cee');
     }
-}
+        }
