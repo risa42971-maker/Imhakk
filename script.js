@@ -75,13 +75,7 @@ function getIPToolHTML() {
         </div>
         
         <div id="ipResult" class="result-box" style="display: none;">
-            <div class="result-title">
-                <i class="fas fa-satellite-dish"></i> IP INFORMATION
-            </div>
             <div id="ipInfo" class="result-content"></div>
-            <div class="developer-credit">
-                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
-            </div>
         </div>
         
         <div id="ipError" class="error-message" style="display: none;"></div>
@@ -126,16 +120,7 @@ function getGmailToolHTML() {
         </div>
         
         <div id="gmailResult" class="result-box" style="display: none;">
-            <div class="result-title">
-                <i class="fas fa-envelope-open-text"></i> GENERATED ACCOUNTS
-            </div>
             <div id="accountsList" class="account-list"></div>
-            <button class="btn-secondary" style="margin-top: 15px; width: 100%;" onclick="exportAccounts()">
-                <i class="fas fa-download"></i> EXPORT AS TXT
-            </button>
-            <div class="developer-credit">
-                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
-            </div>
         </div>
         
         <div id="gmailError" class="error-message" style="display: none;"></div>
@@ -168,18 +153,12 @@ function getLinkToolHTML() {
         </div>
         
         <div id="linkResult" class="result-box" style="display: none;">
-            <div class="result-title">
-                <i class="fas fa-clipboard-check"></i> SCAN RESULTS
-            </div>
             <div id="linkInfo" class="result-content"></div>
-            <div class="developer-credit">
-                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
-            </div>
         </div>
         
         <div id="linkError" class="error-message" style="display: none;"></div>
     `;
-}
+                }
 
 // IP Lookup Function
 async function lookupIP() {
@@ -207,23 +186,84 @@ async function lookupIP() {
         }
 
         const info = `
-            <div>
-                <div><i class="fas fa-globe"></i> <strong>IP Address:</strong> ${ipData.query}</div>
-                <div><i class="fas fa-map-marker-alt"></i> <strong>Country:</strong> ${ipData.country}</div>
-                <div><i class="fas fa-map"></i> <strong>Region:</strong> ${ipData.regionName}</div>
-                <div><i class="fas fa-city"></i> <strong>City:</strong> ${ipData.city}</div>
-                <div><i class="fas fa-wifi"></i> <strong>ISP:</strong> ${ipData.isp}</div>
-                <div><i class="fas fa-building"></i> <strong>Organization:</strong> ${ipData.org || 'N/A'}</div>
-                <div><i class="fas fa-clock"></i> <strong>Timezone:</strong> ${ipData.timezone}</div>
-                <div><i class="fas fa-map-pin"></i> <strong>Coordinates:</strong> ${ipData.lat}, ${ipData.lon}</div>
+            <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <i class="fas fa-satellite-dish" style="font-size: 24px; color: #667eea; margin-right: 10px;"></i>
+                    <span style="font-weight: bold; color: #667eea;">IP INFORMATION</span>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                    <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <i class="fas fa-globe" style="color: #667eea; margin-right: 8px;"></i>
+                        <span style="color: #666; font-size: 0.9em;">IP Address:</span>
+                        <div style="font-weight: bold; margin-top: 5px; color: #333;">${ipData.query}</div>
+                    </div>
+                    
+                    <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <i class="fas fa-map-marker-alt" style="color: #667eea; margin-right: 8px;"></i>
+                        <span style="color: #666; font-size: 0.9em;">Country:</span>
+                        <div style="font-weight: bold; margin-top: 5px; color: #333;">${ipData.country}</div>
+                    </div>
+                    
+                    <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <i class="fas fa-map" style="color: #667eea; margin-right: 8px;"></i>
+                        <span style="color: #666; font-size: 0.9em;">Region:</span>
+                        <div style="font-weight: bold; margin-top: 5px; color: #333;">${ipData.regionName}</div>
+                    </div>
+                    
+                    <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <i class="fas fa-city" style="color: #667eea; margin-right: 8px;"></i>
+                        <span style="color: #666; font-size: 0.9em;">City:</span>
+                        <div style="font-weight: bold; margin-top: 5px; color: #333;">${ipData.city}</div>
+                    </div>
+                    
+                    <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); grid-column: span 2;">
+                        <i class="fas fa-wifi" style="color: #667eea; margin-right: 8px;"></i>
+                        <span style="color: #666; font-size: 0.9em;">ISP:</span>
+                        <div style="font-weight: bold; margin-top: 5px; color: #333;">${ipData.isp}</div>
+                    </div>
+                    
+                    <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); grid-column: span 2;">
+                        <i class="fas fa-building" style="color: #667eea; margin-right: 8px;"></i>
+                        <span style="color: #666; font-size: 0.9em;">Organization:</span>
+                        <div style="font-weight: bold; margin-top: 5px; color: #333;">${ipData.org || 'N/A'}</div>
+                    </div>
+                    
+                    <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <i class="fas fa-clock" style="color: #667eea; margin-right: 8px;"></i>
+                        <span style="color: #666; font-size: 0.9em;">Timezone:</span>
+                        <div style="font-weight: bold; margin-top: 5px; color: #333;">${ipData.timezone}</div>
+                    </div>
+                    
+                    <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <i class="fas fa-map-pin" style="color: #667eea; margin-right: 8px;"></i>
+                        <span style="color: #666; font-size: 0.9em;">Coordinates:</span>
+                        <div style="font-weight: bold; margin-top: 5px; color: #333;">${ipData.lat}, ${ipData.lon}</div>
+                    </div>
+                </div>
             </div>
-            <div class="developer-credit" style="margin-top: 15px;">
-                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+            
+            <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 10px;">
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <i class="fas fa-lightbulb" style="color: #fbbf24; margin-right: 10px;"></i>
+                    <span style="font-weight: bold; color: #667eea;">IP INFO:</span>
+                </div>
+                <ul style="margin-left: 20px; color: #666; line-height: 1.8;">
+                    <li>🌍 This IP is located in ${ipData.country}</li>
+                    <li>📡 ISP: ${ipData.isp}</li>
+                    <li>🔒 ${ipData.org ? 'Organization: ' + ipData.org : 'No organization data'}</li>
+                </ul>
+            </div>
+            
+            <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
+                <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
             </div>
         `;
 
         document.getElementById('ipInfo').innerHTML = info;
         showElement('ipResult');
+        showLoading('ipLoading', false);
+        
     } catch (error) {
         try {
             const fallbackResponse = await fetch(`https://ipapi.co/${ip}/json/`);
@@ -234,27 +274,82 @@ async function lookupIP() {
             }
             
             const info = `
-                <div>
-                    <div><i class="fas fa-globe"></i> <strong>IP Address:</strong> ${fallbackData.ip}</div>
-                    <div><i class="fas fa-map-marker-alt"></i> <strong>Country:</strong> ${fallbackData.country_name}</div>
-                    <div><i class="fas fa-map"></i> <strong>Region:</strong> ${fallbackData.region}</div>
-                    <div><i class="fas fa-city"></i> <strong>City:</strong> ${fallbackData.city}</div>
-                    <div><i class="fas fa-wifi"></i> <strong>ISP:</strong> ${fallbackData.org || 'N/A'}</div>
-                    <div><i class="fas fa-clock"></i> <strong>Timezone:</strong> ${fallbackData.timezone}</div>
-                    <div><i class="fas fa-map-pin"></i> <strong>Coordinates:</strong> ${fallbackData.latitude}, ${fallbackData.longitude}</div>
+                <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <i class="fas fa-satellite-dish" style="font-size: 24px; color: #667eea; margin-right: 10px;"></i>
+                        <span style="font-weight: bold; color: #667eea;">IP INFORMATION</span>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <i class="fas fa-globe" style="color: #667eea; margin-right: 8px;"></i>
+                            <span style="color: #666; font-size: 0.9em;">IP Address:</span>
+                            <div style="font-weight: bold; margin-top: 5px; color: #333;">${fallbackData.ip}</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <i class="fas fa-map-marker-alt" style="color: #667eea; margin-right: 8px;"></i>
+                            <span style="color: #666; font-size: 0.9em;">Country:</span>
+                            <div style="font-weight: bold; margin-top: 5px; color: #333;">${fallbackData.country_name}</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <i class="fas fa-map" style="color: #667eea; margin-right: 8px;"></i>
+                            <span style="color: #666; font-size: 0.9em;">Region:</span>
+                            <div style="font-weight: bold; margin-top: 5px; color: #333;">${fallbackData.region}</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <i class="fas fa-city" style="color: #667eea; margin-right: 8px;"></i>
+                            <span style="color: #666; font-size: 0.9em;">City:</span>
+                            <div style="font-weight: bold; margin-top: 5px; color: #333;">${fallbackData.city}</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); grid-column: span 2;">
+                            <i class="fas fa-building" style="color: #667eea; margin-right: 8px;"></i>
+                            <span style="color: #666; font-size: 0.9em;">Organization:</span>
+                            <div style="font-weight: bold; margin-top: 5px; color: #333;">${fallbackData.org || 'N/A'}</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <i class="fas fa-clock" style="color: #667eea; margin-right: 8px;"></i>
+                            <span style="color: #666; font-size: 0.9em;">Timezone:</span>
+                            <div style="font-weight: bold; margin-top: 5px; color: #333;">${fallbackData.timezone}</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <i class="fas fa-map-pin" style="color: #667eea; margin-right: 8px;"></i>
+                            <span style="color: #666; font-size: 0.9em;">Coordinates:</span>
+                            <div style="font-weight: bold; margin-top: 5px; color: #333;">${fallbackData.latitude}, ${fallbackData.longitude}</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="developer-credit" style="margin-top: 15px;">
-                    <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+                
+                <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 10px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <i class="fas fa-lightbulb" style="color: #fbbf24; margin-right: 10px;"></i>
+                        <span style="font-weight: bold; color: #667eea;">IP INFO:</span>
+                    </div>
+                    <ul style="margin-left: 20px; color: #666; line-height: 1.8;">
+                        <li>🌍 This IP is located in ${fallbackData.country_name}</li>
+                        <li>📡 ISP: ${fallbackData.org || 'Unknown'}</li>
+                        <li>🔒 Currency: ${fallbackData.currency || 'N/A'}</li>
+                    </ul>
+                </div>
+                
+                <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
+                    <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
                 </div>
             `;
             
             document.getElementById('ipInfo').innerHTML = info;
             showElement('ipResult');
+            
         } catch (fallbackError) {
             showError('ipError', '⚠️ CANNOT FETCH IP INFORMATION. PLEASE TRY AGAIN.');
+        } finally {
+            showLoading('ipLoading', false);
         }
-    } finally {
-        showLoading('ipLoading', false);
     }
 }
 
@@ -273,7 +368,7 @@ async function getMyIP() {
         showError('ipError', '⚠️ CANNOT GET YOUR IP');
         showLoading('ipLoading', false);
     }
-}
+                            }
 
 // Gmail Generator Functions
 function generateAccounts(amount) {
@@ -284,10 +379,16 @@ function generateAccounts(amount) {
 
     setTimeout(() => {
         let html = `
-            <div class="account-stats">
-                <span><i class="fas fa-envelope"></i> ${amount} ACCOUNTS</span>
-                <span><i class="fas fa-clock"></i> ${new Date().toLocaleTimeString()}</span>
-            </div>
+            <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <i class="fas fa-envelope-open-text" style="font-size: 24px; color: #667eea; margin-right: 10px;"></i>
+                    <span style="font-weight: bold; color: #667eea;">GENERATED ACCOUNTS</span>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px; padding: 10px; background: white; border-radius: 8px;">
+                    <span><i class="fas fa-envelope"></i> ${amount} ACCOUNTS</span>
+                    <span><i class="fas fa-clock"></i> ${new Date().toLocaleTimeString()}</span>
+                </div>
         `;
 
         for (let i = 0; i < amount; i++) {
@@ -296,24 +397,33 @@ function generateAccounts(amount) {
             accounts.push({email, password});
             
             html += `
-                <div class="account-item">
-                    <div class="account-number">
-                        <i class="fas fa-hashtag"></i> ACCOUNT #${i + 1}
+                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <i class="fas fa-hashtag" style="color: #667eea;"></i>
+                        <span style="font-weight: bold; margin-left: 5px;">ACCOUNT #${i + 1}</span>
                     </div>
-                    <div class="account-email">
-                        <i class="fas fa-envelope"></i> ${email}
+                    <div style="display: grid; gap: 8px;">
+                        <div style="display: flex; align-items: center;">
+                            <i class="fas fa-envelope" style="color: #10b981; width: 20px;"></i>
+                            <span style="color: #666; margin-left: 8px;">${email}</span>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <i class="fas fa-lock" style="color: #f59e0b; width: 20px;"></i>
+                            <span style="color: #666; margin-left: 8px;">${password}</span>
+                        </div>
                     </div>
-                    <div class="account-password">
-                        <i class="fas fa-lock"></i> ${password}
-                    </div>
-                    <div class="account-divider"></div>
                 </div>
             `;
         }
 
         html += `
-            <div class="developer-credit" style="margin-top: 15px;">
-                <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+                <button class="btn-secondary" style="margin-top: 15px; width: 100%;" onclick="exportAccounts()">
+                    <i class="fas fa-download"></i> EXPORT AS TXT
+                </button>
+            </div>
+            
+            <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
+                <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
             </div>
         `;
 
@@ -353,19 +463,22 @@ function generateStrongPassword() {
     accounts = [{email: 'STRONG PASSWORD', password}];
     
     const html = `
-        <div class="account-stats">
-            <span><i class="fas fa-shield-alt"></i> STRONG PASSWORD</span>
-        </div>
-        <div class="account-item">
-            <div class="account-number">
-                <i class="fas fa-key"></i> GENERATED PASSWORD
+        <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 15px; border-radius: 10px;">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <i class="fas fa-key" style="font-size: 24px; color: #667eea; margin-right: 10px;"></i>
+                <span style="font-weight: bold; color: #667eea;">STRONG PASSWORD</span>
             </div>
-            <div class="account-password">
-                <i class="fas fa-lock"></i> ${password}
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                <i class="fas fa-lock" style="font-size: 32px; color: #10b981; margin-bottom: 10px;"></i>
+                <div style="font-family: monospace; font-size: 1.2em; padding: 15px; background: #f0f3ff; border-radius: 8px; word-break: break-all;">
+                    ${password}
+                </div>
             </div>
-        </div>
-        <div class="developer-credit" style="margin-top: 15px;">
-            <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+            
+            <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
+                <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
+            </div>
         </div>
     `;
     
@@ -381,19 +494,22 @@ function generateUsername() {
     accounts = [{email: 'USERNAME', password: username}];
     
     const html = `
-        <div class="account-stats">
-            <span><i class="fas fa-gamepad"></i> COOL USERNAME</span>
-        </div>
-        <div class="account-item">
-            <div class="account-number">
-                <i class="fas fa-tag"></i> GENERATED USERNAME
+        <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 15px; border-radius: 10px;">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <i class="fas fa-gamepad" style="font-size: 24px; color: #667eea; margin-right: 10px;"></i>
+                <span style="font-weight: bold; color: #667eea;">COOL USERNAME</span>
             </div>
-            <div class="account-email">
-                <i class="fas fa-user"></i> ${username}
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                <i class="fas fa-user" style="font-size: 32px; color: #764ba2; margin-bottom: 10px;"></i>
+                <div style="font-size: 1.5em; font-weight: bold; color: #333;">
+                    ${username}
+                </div>
             </div>
-        </div>
-        <div class="developer-credit" style="margin-top: 15px;">
-            <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+            
+            <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
+                <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
+            </div>
         </div>
     `;
     
@@ -451,52 +567,90 @@ function checkLink() {
             const analysis = analyzeLink(link);
             
             let resultHTML = `
-                <div style="margin-bottom: 15px; padding: 10px; background: #f0f3ff; border-radius: 8px;">
-                    <i class="fas fa-link"></i> <strong>URL:</strong> ${link}
+                <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <i class="fas fa-link" style="font-size: 24px; color: #667eea; margin-right: 10px;"></i>
+                        <span style="font-weight: bold; color: #667eea;">URL SCANNED</span>
+                    </div>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); word-break: break-all; margin-bottom: 15px;">
+                        <i class="fas fa-globe" style="color: #667eea; margin-right: 8px;"></i>
+                        <span style="color: #666;">${link}</span>
+                    </div>
                 </div>
             `;
             
             if (analysis.safe) {
                 resultHTML += `
-                    <div style="color: #10b981; text-align: center;">
-                        <i class="fas fa-check-circle" style="font-size: 48px;"></i>
-                        <h3 style="margin: 10px 0;">✅ LINK LOOKS SAFE</h3>
-                        <p>No suspicious patterns detected</p>
+                    <div style="background: linear-gradient(135deg, #10b98110, #10b98120); padding: 20px; border-radius: 10px; margin-bottom: 15px; text-align: center;">
+                        <i class="fas fa-check-circle" style="font-size: 48px; color: #10b981;"></i>
+                        <h3 style="margin: 10px 0; color: #10b981;">✅ LINK LOOKS SAFE</h3>
+                        <p style="color: #666;">No suspicious patterns detected</p>
                     </div>
                 `;
             } else {
                 resultHTML += `
-                    <div style="color: #ef4444; text-align: center;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
-                        <h3 style="margin: 10px 0;">⚠️ SUSPICIOUS LINK DETECTED</h3>
+                    <div style="background: linear-gradient(135deg, #ef444410, #ef444420); padding: 20px; border-radius: 10px; margin-bottom: 15px; text-align: center;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ef4444;"></i>
+                        <h3 style="margin: 10px 0; color: #ef4444;">⚠️ SUSPICIOUS LINK DETECTED</h3>
                     </div>
                 `;
             }
             
-            resultHTML += '<div style="margin-top: 20px;">';
+            resultHTML += `
+                <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <i class="fas fa-exclamation-circle" style="color: #fbbf24; margin-right: 10px;"></i>
+                        <span style="font-weight: bold; color: #667eea;">SCAN RESULTS:</span>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+            `;
+            
             analysis.warnings.forEach(warning => {
+                const isWarning = warning.includes('⚠️');
                 resultHTML += `
-                    <div style="padding: 10px; margin-bottom: 8px; background: ${analysis.safe ? '#f0f3ff' : '#fff2f2'}; border-radius: 6px; border-left: 4px solid ${analysis.safe ? '#667eea' : '#ef4444'};">
-                        <i class="fas ${analysis.safe ? 'fa-info-circle' : 'fa-exclamation-circle'}" style="color: ${analysis.safe ? '#667eea' : '#ef4444'}; margin-right: 8px;"></i>
-                        ${warning}
+                    <div style="background: white; padding: 12px; border-radius: 8px; border-left: 4px solid ${isWarning ? '#ef4444' : '#10b981'}; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <i class="fas ${isWarning ? 'fa-exclamation-circle' : 'fa-check-circle'}" style="color: ${isWarning ? '#ef4444' : '#10b981'}; margin-right: 8px;"></i>
+                        <span style="color: #666;">${warning}</span>
                     </div>
                 `;
             });
-            resultHTML += '</div>';
             
             resultHTML += `
-                <div style="margin-top: 20px; padding: 12px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
-                    <i class="fas fa-lightbulb" style="color: #fbbf24;"></i>
-                    <strong style="color: #667eea;"> SAFETY TIPS:</strong>
-                    <ul style="margin-top: 8px; margin-left: 20px; color: #666;">
-                        <li>Never enter personal information on suspicious sites</li>
-                        <li>Check if the website uses HTTPS (padlock icon)</li>
-                        <li>Be careful with shortened URLs (tinyurl, bit.ly)</li>
-                        <li>If it looks too good to be true, it probably is</li>
-                    </ul>
+                    </div>
                 </div>
-                <div class="developer-credit" style="margin-top: 15px;">
-                    <i class="fas fa-crown"></i> DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span>
+            `;
+            
+            resultHTML += `
+                <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 20px; border-radius: 10px; margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <i class="fas fa-lightbulb" style="color: #fbbf24; font-size: 20px; margin-right: 10px;"></i>
+                        <span style="font-weight: bold; color: #667eea;">SAFETY TIPS:</span>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <i class="fas fa-lock" style="color: #10b981; margin-right: 8px;"></i>
+                            <span style="color: #666;">Use HTTPS</span>
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <i class="fas fa-shield-alt" style="color: #667eea; margin-right: 8px;"></i>
+                            <span style="color: #666;">Avoid short links</span>
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <i class="fas fa-user-secret" style="color: #764ba2; margin-right: 8px;"></i>
+                            <span style="color: #666;">Check domain age</span>
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <i class="fas fa-search" style="color: #f59e0b; margin-right: 8px;"></i>
+                            <span style="color: #666;">Verify sender</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
+                    <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
                 </div>
             `;
             
@@ -536,7 +690,7 @@ function analyzeLink(link) {
     });
     
     const suspiciousTLDs = [
-      ".xyz", ".top", ".club", ".online", ".site", ".live",
+        ".xyz", ".top", ".club", ".online", ".site", ".live",
         ".tk", ".ml", ".ga", ".cf", ".gq",
         ".work", ".download", ".review", ".date", ".men"
     ];
@@ -666,7 +820,6 @@ async function copyToClipboard(elementId) {
         text = element.textContent;
     }
     
-    // យកតែ link សុទ្ធ (មិនយក DEVELOPED BY)
     const linkMatch = text.match(/https?:\/\/[^\s]+/);
     if (linkMatch) {
         text = linkMatch[0];
@@ -678,4 +831,4 @@ async function copyToClipboard(elementId) {
     } catch (err) {
         alert('❌ COPY FAILED\n\n⚡ DEVELOPED BY @TH3Cen_cee');
     }
-            }
+    }
