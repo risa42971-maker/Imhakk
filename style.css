@@ -249,7 +249,6 @@ body {
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 100%;
 }
 
 .btn-primary:hover {
@@ -310,11 +309,59 @@ body {
 
 .result-content {
     background: white;
-    padding: 15px;
+    padding: 20px;
     border-radius: 10px;
     color: #333;
-    font-family: 'Courier New', monospace;
     border: 1px solid #e0e0e0;
+    line-height: 1.6;
+}
+
+.result-content strong {
+    color: #764ba2;
+    min-width: 120px;
+    display: inline-block;
+}
+
+.result-content div {
+    padding: 8px 0;
+    border-bottom: 1px dashed #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.result-content div:last-child {
+    border-bottom: none;
+}
+
+.result-content i {
+    font-size: 1.2em;
+    width: 30px;
+    color: #667eea;
+}
+
+/* Developer Credit */
+.developer-credit {
+    margin-top: 20px;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea10, #764ba210);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 0.95em;
+    border: 1px solid #667eea30;
+    color: #764ba2;
+    font-weight: 500;
+}
+
+.developer-credit i {
+    color: #fbbf24;
+    margin-right: 5px;
+}
+
+.developer-credit .neon-text {
+    color: #764ba2;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 /* Account List */
@@ -398,6 +445,51 @@ body {
     margin-top: 10px;
 }
 
+/* Upload Alternative */
+.upload-alternative {
+    background: #f0f3ff;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    border: 2px dashed #667eea;
+}
+
+.upload-alternative p {
+    color: #667eea;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+/* Telegram Bot Button */
+.telegram-bot-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.telegram-bot-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+.telegram-bot-btn i {
+    font-size: 1.3em;
+}
+
 /* Loading */
 .loading {
     display: flex;
@@ -436,10 +528,18 @@ body {
     background: #fff2f2;
     border: 1px solid #ff6b6b;
     color: #ff6b6b;
-    padding: 12px;
+    padding: 15px;
     border-radius: 8px;
     text-align: center;
     margin-top: 15px;
+    line-height: 1.6;
+}
+
+.error-message span {
+    display: block;
+    margin-top: 10px;
+    color: #764ba2;
+    font-size: 0.9em;
 }
 
 /* Footer */
@@ -521,4 +621,4 @@ body {
         flex-direction: column;
         gap: 5px;
     }
-}
+    }
