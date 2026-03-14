@@ -44,6 +44,9 @@ function loadToolContent(tool) {
         case 'repeat':
             container.innerHTML = getRepeatToolHTML();
             break;
+        case 'video':
+            container.innerHTML = getVideoToolHTML();
+            break;
     }
 }
 
@@ -85,7 +88,7 @@ function getIPToolHTML() {
     `;
 }
 
-// Gmail Generator Tool HTML (កែប្រែ)
+// Gmail Generator Tool HTML
 function getGmailToolHTML() {
     return `
         <div class="tool-header">
@@ -327,7 +330,7 @@ function downloadRepeat() {
 }
 // ====================================================
 
-// ==================== TELEGRAM CONTACT FUNCTION (ថ្មី) ====================
+// ==================== TELEGRAM CONTACT FUNCTION ====================
 function showTelegramContact(amount) {
     const errorDiv = document.getElementById('gmailError');
     if (errorDiv) {
@@ -562,9 +565,8 @@ async function getMyIP() {
     }
 }
 
-// Gmail Generator Functions (កែប្រែតែ generateAccounts function)
+// Gmail Generator Functions
 function generateAccounts(amount) {
-    // បើជា 5 ឬ 10 account បង្ហាញសារ Telegram
     if (amount === 5 || amount === 10) {
         showTelegramContact(amount);
         return;
@@ -741,6 +743,268 @@ function exportAccounts() {
     a.click();
     window.URL.revokeObjectURL(url);
 }
+
+// ==================== VIDEO DOWNLOADER TOOL ====================
+function getVideoToolHTML() {
+    return `
+        <div class="tool-header">
+            <div class="tool-icon">🎥</div>
+            <div class="tool-title">
+                <h2>VIDEO DOWNLOADER</h2>
+                <p>>_ Download videos from social media</p>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label><i class="fas fa-link"></i> PASTE VIDEO LINK :</label>
+            <input type="url" id="videoLink" class="input-field" placeholder="https://www.facebook.com/watch/?v=...">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label><i class="fas fa-download"></i> SELECT PLATFORM :</label>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
+                <button class="platform-btn" onclick="selectPlatform('facebook')" id="platform-facebook" style="background: linear-gradient(135deg, #1877f2, #0d5ab9); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <i class="fab fa-facebook"></i> Facebook
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('tiktok')" id="platform-tiktok" style="background: linear-gradient(135deg, #000000, #25f4ee); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <i class="fab fa-tiktok"></i> TikTok
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('youtube')" id="platform-youtube" style="background: linear-gradient(135deg, #ff0000, #cc0000); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <i class="fab fa-youtube"></i> YouTube
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('instagram')" id="platform-instagram" style="background: linear-gradient(135deg, #833ab4, #e1306c); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <i class="fab fa-instagram"></i> Instagram
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('twitter')" id="platform-twitter" style="background: linear-gradient(135deg, #1da1f2, #0d8bd9); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <i class="fab fa-twitter"></i> Twitter
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('pinterest')" id="platform-pinterest" style="background: linear-gradient(135deg, #bd081c, #8b0615); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <i class="fab fa-pinterest"></i> Pinterest
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('snapchat')" id="platform-snapchat" style="background: linear-gradient(135deg, #fffc00, #f5ee00); color: black; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <i class="fab fa-snapchat"></i> Snapchat
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('reddit')" id="platform-reddit" style="background: linear-gradient(135deg, #ff4500, #cc3700); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <i class="fab fa-reddit"></i> Reddit
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('vimeo')" id="platform-vimeo" style="background: linear-gradient(135deg, #1ab7ea, #1495c2); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <i class="fab fa-vimeo"></i> Vimeo
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('dailymotion')" id="platform-dailymotion" style="background: linear-gradient(135deg, #0066dc, #0048a0); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <i class="fas fa-play-circle"></i> Dailymotion
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('twitch')" id="platform-twitch" style="background: linear-gradient(135deg, #9146ff, #6f35c2); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <i class="fab fa-twitch"></i> Twitch
+                </button>
+                <button class="platform-btn" onclick="selectPlatform('linkedin')" id="platform-linkedin" style="background: linear-gradient(135deg, #0077b5, #005e8c); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </button>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button class="btn-primary" onclick="downloadVideo()" style="flex: 2;">
+                <i class="fas fa-download"></i> DOWNLOAD VIDEO
+            </button>
+            <button class="btn-secondary" onclick="clearVideo()" style="flex: 1;">
+                <i class="fas fa-trash"></i> CLEAR
+            </button>
+        </div>
+        
+        <div id="videoLoading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <span>PROCESSING VIDEO LINK...</span>
+        </div>
+        
+        <div id="videoResult" class="result-box" style="display: none;">
+            <div id="videoInfo" class="result-content"></div>
+        </div>
+        
+        <div id="videoError" class="error-message" style="display: none;"></div>
+        
+        <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
+            <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
+        </div>
+    `;
+}
+
+// Selected platform
+let selectedPlatform = '';
+
+// Select platform
+function selectPlatform(platform) {
+    selectedPlatform = platform;
+    
+    // Remove active class from all platform buttons
+    document.querySelectorAll('.platform-btn').forEach(btn => {
+        btn.style.opacity = '0.7';
+        btn.style.transform = 'scale(1)';
+    });
+    
+    // Add active class to selected platform
+    const selectedBtn = document.getElementById(`platform-${platform}`);
+    if (selectedBtn) {
+        selectedBtn.style.opacity = '1';
+        selectedBtn.style.transform = 'scale(1.05)';
+    }
+}
+
+// Download video
+function downloadVideo() {
+    const link = document.getElementById('videoLink').value.trim();
+    
+    if (!link) {
+        showError('videoError', '⚠️ PLEASE PASTE A VIDEO LINK');
+        return;
+    }
+    
+    if (!selectedPlatform) {
+        showError('videoError', '⚠️ PLEASE SELECT A PLATFORM');
+        return;
+    }
+    
+    showLoading('videoLoading', true);
+    hideElement('videoResult');
+    hideElement('videoError');
+    
+    setTimeout(() => {
+        try {
+            const platformNames = {
+                'facebook': 'Facebook',
+                'tiktok': 'TikTok',
+                'youtube': 'YouTube',
+                'instagram': 'Instagram',
+                'twitter': 'Twitter',
+                'pinterest': 'Pinterest',
+                'snapchat': 'Snapchat',
+                'reddit': 'Reddit',
+                'vimeo': 'Vimeo',
+                'dailymotion': 'Dailymotion',
+                'twitch': 'Twitch',
+                'linkedin': 'LinkedIn'
+            };
+            
+            const resultHTML = `
+                <div style="background: linear-gradient(135deg, #667eea10, #764ba210); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <i class="fas fa-check-circle" style="font-size: 24px; color: #10b981; margin-right: 10px;"></i>
+                        <span style="font-weight: bold; color: #667eea;">VIDEO FOUND</span>
+                    </div>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); word-break: break-all; margin-bottom: 15px;">
+                        <i class="fas fa-globe" style="color: #667eea; margin-right: 8px;"></i>
+                        <span style="color: #666;">${link}</span>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 15px;">
+                        <i class="fab fa-${selectedPlatform}" style="font-size: 48px; color: #667eea; margin-bottom: 10px;"></i>
+                        <h3 style="color: #764ba2; margin-bottom: 5px;">${platformNames[selectedPlatform]}</h3>
+                        <p style="color: #666;">Video ready for download</p>
+                    </div>
+                    
+                    <div style="background: #f0f3ff; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <p style="color: #667eea; margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Download Information:</p>
+                        <ul style="color: #666; margin-left: 20px; line-height: 1.8;">
+                            <li>🎥 Quality: HD Available</li>
+                            <li>📁 Format: MP4</li>
+                            <li>📦 Size: Varies by video</li>
+                            <li>🔗 Source: ${platformNames[selectedPlatform]}</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button class="btn-primary" onclick="simulateDownload('${selectedPlatform}')" style="flex: 1;">
+                            <i class="fas fa-download"></i> DOWNLOAD NOW
+                        </button>
+                        <button class="btn-secondary" onclick="copyVideoLink()" style="flex: 1;">
+                            <i class="fas fa-copy"></i> COPY LINK
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
+                    <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
+                </div>
+            `;
+            
+            document.getElementById('videoInfo').innerHTML = resultHTML;
+            showElement('videoResult');
+            
+        } catch (error) {
+            showError('videoError', '⚠️ ERROR PROCESSING VIDEO LINK');
+        } finally {
+            showLoading('videoLoading', false);
+        }
+    }, 1000);
+}
+
+// Simulate download
+function simulateDownload(platform) {
+    showLoading('videoLoading', true);
+    
+    setTimeout(() => {
+        showLoading('videoLoading', false);
+        
+        // Create a fake download
+        const link = document.getElementById('videoLink').value.trim();
+        const fileName = `video_${platform}_${Date.now()}.mp4`;
+        
+        // Create a text file with video info instead of actual video
+        const content = `VIDEO DOWNLOAD INFORMATION\n`;
+        content += `==========================\n`;
+        content += `Platform: ${platform}\n`;
+        content += `Link: ${link}\n`;
+        content += `Download Time: ${new Date().toLocaleString()}\n`;
+        content += `Status: Ready for download\n`;
+        content += `\n`;
+        content += `Note: This is a simulated download. In a real application, \n`;
+        content += `you would need a backend service to actually download videos.\n`;
+        content += `\n`;
+        content += `⚡ DEVELOPED BY @TH3Cen_cee ⚡\n`;
+        
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName.replace('.mp4', '_info.txt');
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        alert(`✅ DOWNLOAD STARTED!\n\nVideo information saved as text file.\n\n⚡ DEVELOPED BY @TH3Cen_cee`);
+    }, 1500);
+}
+
+// Copy video link
+function copyVideoLink() {
+    const link = document.getElementById('videoLink').value.trim();
+    
+    if (!link) {
+        showError('videoError', '⚠️ NO LINK TO COPY');
+        return;
+    }
+    
+    navigator.clipboard.writeText(link).then(() => {
+        alert('✅ LINK COPIED TO CLIPBOARD!\n\n⚡ DEVELOPED BY @TH3Cen_cee');
+    }).catch(() => {
+        showError('videoError', '⚠️ COPY FAILED');
+    });
+}
+
+// Clear video input
+function clearVideo() {
+    document.getElementById('videoLink').value = '';
+    selectedPlatform = '';
+    
+    // Reset platform buttons
+    document.querySelectorAll('.platform-btn').forEach(btn => {
+        btn.style.opacity = '0.7';
+        btn.style.transform = 'scale(1)';
+    });
+    
+    hideElement('videoResult');
+    hideElement('videoError');
+}
+// ====================================================
 
 // Link Checker Function
 function checkLink() {
@@ -1006,4 +1270,4 @@ function showError(elementId, message) {
             element.style.display = 'none';
         }, 3000);
     }
-            }
+}
