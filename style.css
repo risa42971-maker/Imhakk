@@ -27,10 +27,26 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
+/* Header Content - កែប្រែថ្មី */
+.header-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 20px;
+    padding: 0 20px;
+}
+
+.header-content h1 {
+    margin: 0;
+    flex: 1;
+    text-align: center;
+}
+
 .glitch {
     font-size: 2.5em;
     color: #764ba2;
-    margin-bottom: 10px;
+    margin-bottom: 0;
 }
 
 .cyber-subtitle {
@@ -59,8 +75,12 @@ body {
     border-radius: 50%;
 }
 
-/* Dark Mode Toggle */
+/* Dark Mode Toggle - កែប្រែថ្មី */
 .dark-mode-toggle {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
     background: linear-gradient(135deg, #667eea, #764ba2);
     border: none;
     color: white;
@@ -77,7 +97,7 @@ body {
 }
 
 .dark-mode-toggle:hover {
-    transform: translateY(-3px);
+    transform: translateY(-50%) scale(1.05);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
 }
 
@@ -280,6 +300,7 @@ body {
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
+    width: 100%;
 }
 
 .btn-primary:hover {
@@ -470,12 +491,6 @@ body {
     font-family: 'Courier New', monospace;
 }
 
-.account-divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #667eea, #764ba2, transparent);
-    margin-top: 10px;
-}
-
 /* Upload Alternative */
 .upload-alternative {
     background: #f0f3ff;
@@ -515,10 +530,6 @@ body {
 .telegram-bot-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-}
-
-.telegram-bot-btn i {
-    font-size: 1.3em;
 }
 
 /* Loading */
@@ -923,8 +934,30 @@ body.dark-mode ::selection {
     color: #1a1c2e;
 }
 
-/* Responsive */
+/* ==================== RESPONSIVE STYLES ==================== */
+
+/* Responsive for dark mode toggle and header */
 @media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 15px;
+        padding: 0 10px;
+    }
+    
+    .dark-mode-toggle {
+        position: static;
+        transform: none;
+        margin-top: 10px;
+    }
+    
+    .dark-mode-toggle:hover {
+        transform: scale(1.05);
+    }
+    
+    .dark-mode-toggle .toggle-text {
+        display: inline;
+    }
+    
     .glitch {
         font-size: 1.8em;
     }
@@ -965,17 +998,27 @@ body.dark-mode ::selection {
         flex-direction: column;
         gap: 5px;
     }
-    
+}
+
+/* សម្រាប់អេក្រង់តូចណាស់ */
+@media (max-width: 480px) {
     .dark-mode-toggle {
         padding: 8px 15px;
         font-size: 0.9em;
     }
     
-    .dark-mode-toggle .toggle-text {
-        display: none;
+    .tool-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
     }
     
-    .dark-mode-toggle i {
-        font-size: 1.3em;
+    .tool-title h2 {
+        font-size: 1.5em;
     }
-}
+    
+    .footer-stats {
+        gap: 10px;
+        flex-direction: column;
+    }
+    }
