@@ -9,9 +9,16 @@
 </head>
 <body>
     <div class="main-container">
-        <!-- Header -->
+        <!-- Header with Dark Mode Toggle -->
         <div class="cyber-header">
-            <h1 class="glitch">⚡ HAKK TOOL ⚡</h1>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div></div>
+                <h1 class="glitch">⚡ HAKK TOOL ⚡</h1>
+                <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()">
+                    <i class="fas fa-moon"></i>
+                    <span class="toggle-text">DARK</span>
+                </button>
+            </div>
             <p class="cyber-subtitle">>_ 4 Advanced Tools in One Place_</p>
             <div class="cyber-decoration">
                 <span class="line"></span>
@@ -43,7 +50,7 @@
             </div>
         </div>
 
-        <!-- Menu (បន្ថែម Repeat Word) -->
+        <!-- Menu -->
         <div class="cyber-menu">
             <button class="cyber-btn active" onclick="showTool('ip')" id="menu-ip">
                 <i class="fas fa-globe"></i> IP LOOKUP
@@ -64,7 +71,7 @@
             <!-- Tools will be loaded here -->
         </div>
 
-        <!-- Footer (កែចំនួន Tools) -->
+        <!-- Footer -->
         <div class="cyber-footer">
             <p>⚡ DEVELOPED BY <span class="neon-text">@TH3Cen_cee</span> ⚡</p>
             <div class="footer-stats">
