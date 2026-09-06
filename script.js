@@ -1,438 +1,4 @@
-// ==================== STATE MANAGEMENT ====================
-let currentTool = 'ip';
-let accounts = [];
-let lastUploadedLink = '';
-let lastQRCodeData = '';
-
-// ==================== INITIALIZATION ====================
-document.addEventListener('DOMContentLoaded', () => {
-    showTool('ip');
-    
-    // Check if user previously enabled dark mode
-    const darkModePref = localStorage.getItem('darkMode');
-    
-    if (darkModePref === 'enabled') {
-        document.body.classList.add('dark-mode');
-        const toggleBtn = document.getElementById('darkModeToggle');
-        if (toggleBtn) {
-            const icon = toggleBtn.querySelector('i');
-            const text = toggleBtn.querySelector('.toggle-text');
-            icon.className = 'fas fa-sun';
-            text.textContent = 'LIGHT';
-        }
-    }
-    
-    // Check system preference if no saved preference
-    if (!darkModePref && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark-mode');
-        const toggleBtn = document.getElementById('darkModeToggle');
-        if (toggleBtn) {
-            const icon = toggleBtn.querySelector('i');
-            const text = toggleBtn.querySelector('.toggle-text');
-            icon.className = 'fas fa-sun';
-            text.textContent = 'LIGHT';
-        }
-    }
-    
-    // Listen for system theme changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-        if (!localStorage.getItem('darkMode')) {
-            if (event.matches) {
-                document.body.classList.add('dark-mode');
-                updateToggleButton(true);
-            } else {
-                document.body.classList.remove('dark-mode');
-                updateToggleButton(false);
-            }
-        }
-    });
-});
-
-// ==================== TOOL NAVIGATION ====================
-function showTool(tool) {
-    currentTool = tool;
-    
-    document.querySelectorAll('.cyber-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.getElementById(`menu-${tool}`).classList.add('active');
-    
-    const container = document.getElementById('toolContainer');
-    container.style.opacity = '0';
-    
-    setTimeout(() => {
-        loadToolContent(tool);
-        container.style.opacity = '1';
-    }, 200);
-}
-
-function loadToolContent(tool) {
-    const container = document.getElementById('toolContainer');
-    
-    switch(tool) {
-        case 'ip':
-            container.innerHTML = getIPToolHTML();
-            break;
-        case 'link':
-            container.innerHTML = getLinkToolHTML();
-            break;
-        case 'gmail':
-            container.innerHTML = getGmailToolHTML();
-            break;
-        case 'repeat':
-            container.innerHTML = getRepeatToolHTML();
-            break;
-        case 'base64':
-            container.innerHTML = getBase64ToolHTML();
-            break;
-        case 'password':
-            container.innerHTML = getPasswordToolHTML();
-            break;
-        case 'qrcode':
-            container.innerHTML = getQRCodeToolHTML();
-            break;
-        case 'useragent':
-            container.innerHTML = getUserAgentToolHTML();
-            break;
-    }
-}
-
-// ==================== TOOL HTML TEMPLATES ====================
-function getIPToolHTML() {
-    return `
-        <div class="tool-header">
-            <div class="tool-icon">🌐</div>
-            <div class="tool-title">
-                <h2>IP LOOKUP</h2>
-                <p>>_ Track any IP address</p>
-            </div>
-        </div>
-        
-        <div class="input-group">
-            <label><i class="fas fa-search"></i> ENTER IP ADDRESS :</label>
-            <input type="text" id="ipInput" class="input-field" placeholder="8.8.8.8" value="8.8.8.8">
-        </div>
-        
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button class="btn-primary" onclick="lookupIP()" style="flex: 2;">
-                <i class="fas fa-search"></i> SCAN IP
-            </button>
-            <button class="btn-secondary" onclick="getMyIP()" style="flex: 1;">
-                <i class="fas fa-laptop"></i> MY IP
-            </button>
-        </div>
-        
-        <div id="ipLoading" class="loading" style="display: none;">
-            <div class="spinner"></div>
-            <span>SCANNING IP ADDRESS...</span>
-        </div>
-        
-        <div id="ipResult" class="result-box" style="display: none;">
-            <div id="ipInfo" class="result-content"></div>
-        </div>
-        
-        <div id="ipError" class="error-message" style="display: none;"></div>
-    `;
-}
-
-function getGmailToolHTML() {
-    return `
-        <div class="tool-header">
-            <div class="tool-icon">📧</div>
-            <div class="tool-title">
-                <h2>GMAIL GENERATOR</h2>
-                <p>>_ Generate random email accounts (Working!)</p>
-            </div>
-        </div>
-        
-        <div class="button-group">
-            <button class="btn-secondary" onclick="generateAccounts(1)">
-                <i class="fas fa-envelope"></i> 1 ACCOUNT
-            </button>
-            <button class="btn-secondary" onclick="generateAccounts(5)">
-                <i class="fas fa-envelopes-bulk"></i> 5 ACCOUNTS
-            </button>
-            <button class="btn-secondary" onclick="generateAccounts(10)">
-                <i class="fas fa-layer-group"></i> 10 ACCOUNTS
-            </button>
-            <button class="btn-secondary" onclick="generateAccounts(20)">
-                <i class="fas fa-database"></i> 20 ACCOUNTS
-            </button>
-            <button class="btn-secondary" onclick="generateAccounts(50)">
-                <i class="fas fa-chart-line"></i> 50 ACCOUNTS
-            </button>
-        </div>
-        
-        <div class="button-group">
-            <button class="btn-secondary" onclick="generateStrongPassword()">
-                <i class="fas fa-lock"></i> STRONG PASS
-            </button>
-            <button class="btn-secondary" onclick="generateUsername()">
-                <i class="fas fa-gamepad"></i> USERNAME
-            </button>
-            <button class="btn-secondary" onclick="exportAccountsCSV()">
-                <i class="fas fa-file-csv"></i> EXPORT CSV
-            </button>
-            <button class="btn-secondary" onclick="exportAccountsJSON()">
-                <i class="fas fa-code"></i> EXPORT JSON
-            </button>
-        </div>
-        
-        <div id="gmailLoading" class="loading" style="display: none;">
-            <div class="spinner"></div>
-            <span>GENERATING ACCOUNTS...</span>
-        </div>
-        
-        <div id="gmailResult" class="result-box" style="display: none;">
-            <div id="accountsList" class="account-list"></div>
-        </div>
-        
-        <div id="gmailError" class="error-message" style="display: none;"></div>
-    `;
-}
-
-function getLinkToolHTML() {
-    return `
-        <div class="tool-header">
-            <div class="tool-icon">🔍</div>
-            <div class="tool-title">
-                <h2>LINK CHECKER</h2>
-                <p>>_ Check if a link is safe or suspicious</p>
-            </div>
-        </div>
-        
-        <div class="input-group">
-            <label><i class="fas fa-link"></i> ENTER URL TO CHECK :</label>
-            <input type="url" id="linkInput" class="input-field" placeholder="https://example.com">
-        </div>
-        
-        <button class="btn-primary" onclick="checkLink()">
-            <i class="fas fa-shield-alt"></i> SCAN LINK
-        </button>
-        
-        <div id="linkLoading" class="loading" style="display: none;">
-            <div class="spinner"></div>
-            <span>SCANNING LINK FOR THREATS...</span>
-        </div>
-        
-        <div id="linkResult" class="result-box" style="display: none;">
-            <div id="linkInfo" class="result-content"></div>
-        </div>
-        
-        <div id="linkError" class="error-message" style="display: none;"></div>
-    `;
-}
-
-function getRepeatToolHTML() {
-    return `
-        <div class="tool-header">
-            <div class="tool-icon">🔄</div>
-            <div class="tool-title">
-                <h2>REPEAT WORD</h2>
-                <p>>_ Repeat any word up to 1000 times</p>
-            </div>
-        </div>
-        
-        <div class="input-group">
-            <label><i class="fas fa-pencil-alt"></i> ENTER YOUR TEXT :</label>
-            <input type="text" id="repeatText" class="input-field" placeholder="សួស្តី Deepseek">
-        </div>
-        
-        <div class="input-group">
-            <label><i class="fas fa-hashtag"></i> NUMBER OF TIMES (MAX 1000) :</label>
-            <input type="number" id="repeatCount" class="input-field" placeholder="100" min="1" max="1000" value="100">
-        </div>
-        
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button class="btn-primary" onclick="generateRepeat()" style="flex: 2;">
-                <i class="fas fa-play"></i> GENERATE
-            </button>
-            <button class="btn-secondary" onclick="clearRepeat()" style="flex: 1;">
-                <i class="fas fa-trash"></i> CLEAR
-            </button>
-        </div>
-        
-        <div id="repeatLoading" class="loading" style="display: none;">
-            <div class="spinner"></div>
-            <span>GENERATING REPEATED TEXT...</span>
-        </div>
-        
-        <div id="repeatResult" class="result-box" style="display: none;">
-            <div class="account-stats">
-                <span><i class="fas fa-list"></i> <span id="repeatCountDisplay">0</span> LINES</span>
-                <span><i class="fas fa-clock"></i> <span id="repeatTimeDisplay">0.0</span>s</span>
-            </div>
-            <div id="repeatContent" class="result-content" style="max-height: 400px; overflow-y: auto; font-family: monospace; white-space: pre-wrap;"></div>
-            
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button class="btn-secondary" onclick="copyRepeat()" style="flex: 1;">
-                    <i class="fas fa-copy"></i> COPY
-                </button>
-                <button class="btn-secondary" onclick="downloadRepeat()" style="flex: 1;">
-                    <i class="fas fa-download"></i> DOWNLOAD TXT
-                </button>
-            </div>
-        </div>
-        
-        <div id="repeatError" class="error-message" style="display: none;"></div>
-        
-        <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
-            <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
-        </div>
-    `;
-}
-
-function getBase64ToolHTML() {
-    return `
-        <div class="tool-header">
-            <div class="tool-icon">🔐</div>
-            <div class="tool-title">
-                <h2>BASE64 ENCODER/DECODER</h2>
-                <p>>_ Encode or decode Base64 strings</p>
-            </div>
-        </div>
-        
-        <div class="input-group">
-            <label><i class="fas fa-code"></i> INPUT TEXT :</label>
-            <textarea id="base64Input" class="input-field" rows="4" placeholder="Enter text to encode or decode..."></textarea>
-        </div>
-        
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button class="btn-primary" onclick="encodeBase64()" style="flex: 1;">
-                <i class="fas fa-lock"></i> ENCODE → BASE64
-            </button>
-            <button class="btn-primary" onclick="decodeBase64()" style="flex: 1;">
-                <i class="fas fa-unlock-alt"></i> DECODE ← BASE64
-            </button>
-        </div>
-        
-        <div id="base64Result" class="result-box" style="display: none;">
-            <div class="result-title">
-                <i class="fas fa-file-alt"></i> RESULT:
-                <button class="btn-secondary" style="margin-left: auto; padding: 5px 10px;" onclick="copyBase64Result()">
-                    <i class="fas fa-copy"></i> COPY
-                </button>
-            </div>
-            <div id="base64Content" class="result-content" style="word-break: break-all;"></div>
-        </div>
-        
-        <div id="base64Error" class="error-message" style="display: none;"></div>
-        
-        <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
-            <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
-        </div>
-    `;
-}
-
-function getPasswordToolHTML() {
-    return `
-        <div class="tool-header">
-            <div class="tool-icon">🔒</div>
-            <div class="tool-title">
-                <h2>PASSWORD STRENGTH CHECKER</h2>
-                <p>>_ Check how strong your password is</p>
-            </div>
-        </div>
-        
-        <div class="input-group">
-            <label><i class="fas fa-key"></i> ENTER PASSWORD :</label>
-            <input type="password" id="passwordInput" class="input-field" placeholder="Enter your password...">
-            <button class="btn-secondary" style="margin-top: 5px;" onclick="togglePasswordVisibility()">
-                <i class="fas fa-eye"></i> SHOW/HIDE
-            </button>
-        </div>
-        
-        <button class="btn-primary" onclick="checkPasswordStrength()">
-            <i class="fas fa-shield-alt"></i> CHECK STRENGTH
-        </button>
-        
-        <div id="passwordResult" class="result-box" style="display: none;">
-            <div id="passwordInfo" class="result-content"></div>
-        </div>
-        
-        <div id="passwordError" class="error-message" style="display: none;"></div>
-        
-        <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
-            <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
-        </div>
-    `;
-}
-
-function getQRCodeToolHTML() {
-    return `
-        <div class="tool-header">
-            <div class="tool-icon">📱</div>
-            <div class="tool-title">
-                <h2>QR CODE GENERATOR</h2>
-                <p>>_ Convert text or link to QR Code</p>
-            </div>
-        </div>
-        
-        <div class="input-group">
-            <label><i class="fas fa-pencil-alt"></i> ENTER TEXT OR URL :</label>
-            <textarea id="qrText" class="input-field" rows="3" placeholder="Enter text, URL, or any data..."></textarea>
-        </div>
-        
-        <button class="btn-primary" onclick="generateQRCode()">
-            <i class="fas fa-qrcode"></i> GENERATE QR CODE
-        </button>
-        
-        <div id="qrResult" class="result-box" style="display: none; text-align: center;">
-            <div id="qrImageContainer"></div>
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button class="btn-secondary" onclick="downloadQRCode()" style="flex: 1;">
-                    <i class="fas fa-download"></i> DOWNLOAD PNG
-                </button>
-            </div>
-        </div>
-        
-        <div id="qrError" class="error-message" style="display: none;"></div>
-        
-        <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
-            <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
-        </div>
-    `;
-}
-
-function getUserAgentToolHTML() {
-    return `
-        <div class="tool-header">
-            <div class="tool-icon">🖥️</div>
-            <div class="tool-title">
-                <h2>RANDOM USER AGENT</h2>
-                <p>>_ Generate random browser user agents</p>
-            </div>
-        </div>
-        
-        <div class="button-group">
-            <button class="btn-secondary" onclick="generateRandomUserAgent()">
-                <i class="fas fa-random"></i> GENERATE RANDOM
-            </button>
-            <button class="btn-secondary" onclick="getCurrentUserAgent()">
-                <i class="fas fa-laptop"></i> MY USER AGENT
-            </button>
-        </div>
-        
-        <div id="userAgentResult" class="result-box" style="display: none;">
-            <div class="result-title">
-                <i class="fas fa-info-circle"></i> USER AGENT:
-                <button class="btn-secondary" style="margin-left: auto; padding: 5px 10px;" onclick="copyUserAgent()">
-                    <i class="fas fa-copy"></i> COPY
-                </button>
-            </div>
-            <div id="userAgentContent" class="result-content" style="word-break: break-all; font-family: monospace;"></div>
-        </div>
-        
-        <div id="userAgentError" class="error-message" style="display: none;"></div>
-        
-        <div class="developer-credit" style="margin-top: 15px; text-align: center; padding: 10px; background: linear-gradient(135deg, #667eea10, #764ba210); border-radius: 8px;">
-            <i class="fas fa-crown" style="color: #fbbf24;"></i> DEVELOPED BY <span class="neon-text" style="color: #667eea; font-weight: bold;">@TH3Cen_cee</span>
-        </div>
-    `;
-}
-
-// ==================== DARK MODE FUNCTIONS ====================
-function toggleDarkMode() {
+on toggleDarkMode() {
     const body = document.body;
     const toggleBtn = document.getElementById('darkModeToggle');
     const icon = toggleBtn.querySelector('i');
@@ -1488,6 +1054,77 @@ function downloadQRCode() {
         showToast('📸 QR Code downloaded!');
     } else {
         showError('qrError', '⚠️ No QR Code to download');
+    }
+}
+
+// ==================== BINARY CONVERTER FUNCTIONS ====================
+function textToBinary() {
+    const text = document.getElementById('binaryTextInput').value;
+    
+    if (!text) {
+        showError('binaryError', '⚠️ PLEASE ENTER TEXT TO CONVERT TO BINARY');
+        return;
+    }
+    
+    try {
+        let binaryResult = '';
+        for (let i = 0; i < text.length; i++) {
+            const charCode = text.charCodeAt(i);
+            const binary = charCode.toString(2).padStart(8, '0');
+            binaryResult += binary + ' ';
+        }
+        
+        document.getElementById('binaryContent').innerHTML = binaryResult.trim();
+        showElement('binaryResult');
+        hideElement('binaryError');
+        showToast('🤖 Converted to Binary!');
+    } catch (error) {
+        showError('binaryError', '⚠️ CONVERSION FAILED');
+    }
+}
+
+function binaryToText() {
+    const binaryInput = document.getElementById('binaryInput').value.trim();
+    
+    if (!binaryInput) {
+        showError('binaryError', '⚠️ PLEASE ENTER BINARY TO CONVERT TO TEXT');
+        return;
+    }
+    
+    try {
+        // Split by spaces
+        const binaryArray = binaryInput.split(/\s+/);
+        let textResult = '';
+        
+        for (let i = 0; i < binaryArray.length; i++) {
+            // Remove any non-binary characters
+            const cleanBinary = binaryArray[i].replace(/[^01]/g, '');
+            if (cleanBinary.length === 0) continue;
+            
+            // Parse binary to decimal
+            const charCode = parseInt(cleanBinary, 2);
+            if (isNaN(charCode)) continue;
+            
+            textResult += String.fromCharCode(charCode);
+        }
+        
+        if (textResult.length === 0) {
+            throw new Error('Invalid binary input');
+        }
+        
+        document.getElementById('binaryContent').innerHTML = textResult;
+        showElement('binaryResult');
+        hideElement('binaryError');
+        showToast('🔓 Decoded from Binary!');
+    } catch (error) {
+        showError('binaryError', '⚠️ INVALID BINARY STRING. Please use space-separated 8-bit binary (e.g., 01001000 01101001)');
+    }
+}
+
+function copyBinaryResult() {
+    const content = document.getElementById('binaryContent').innerText;
+    if (content) {
+        copyToClipboard(content);
     }
 }
 
